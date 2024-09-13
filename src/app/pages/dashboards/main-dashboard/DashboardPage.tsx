@@ -14,7 +14,7 @@ export const DashboardPage: React.FC = () => {
                 500,000
               </div>
               <div className="d-flex flex-column ">
-                <button className=" btn btn-light-info ps-5 pe-5" onClick={()=>setshowApplyLoanModal(true)}>Apply Now</button>
+                <button className=" btn btn-light-info ps-5 pe-5" onClick={()=>setShowApplyLoanModal(true)}>Apply Now</button>
               </div>
          </div>
           </div>
