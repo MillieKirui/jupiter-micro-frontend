@@ -85,7 +85,7 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
 
   return (
     <Modal
-      id="kt_modal_create_app"
+      id="kt_modal_apply_loan"
       tabIndex={-1}
       aria-hidden="true"
       dialogClassName="modal-dialog-centered mw-1000px h-auto"
@@ -111,7 +111,7 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
           <div
             ref={stepperRef}
             className="stepper stepper-1 d-flex flex-column flex-xl-row flex-row-fluid"
-            id="kt_modal_create_app_stepper"
+            id="kt_modal_apply_loan_stepper"
           >
               {/*begin::Aside */}
               <div className="d-flex justify-content-center justify-content-xl-start flex-row-auto w-100 w-xl-300px">
@@ -210,7 +210,7 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
               <form
                 className="pb-5 w-100 w-md-400px w-xl-500px"
                 noValidate
-                id="kt_modal_create_app_form"
+                id="kt_modal_apply_loan_form"
               >
                 {/*begin::Step 1 */}
                 <div className="pb-5 current" data-kt-stepper-element="content">

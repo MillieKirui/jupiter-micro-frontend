@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { ApplyLoanModal } from "../_modals/create-app-stepper/ApplyLoanModal";
 
 export const DashboardPage: React.FC = () => {
-  const [showCreateAppModal, setShowCreateAppModal] = useState(false);
+  const [showApplyLoanModal, setShowApplyLoanModal] = useState(false);
   return (
     <>
       {/* begin::Row */}
@@ -14,7 +14,7 @@ export const DashboardPage: React.FC = () => {
                 500,000
               </div>
               <div className="d-flex flex-column ">
-                <button className=" btn btn-light-info ps-5 pe-5" onClick={()=>setShowCreateAppModal(true)}>Apply Now</button>
+                <button className=" btn btn-light-info ps-5 pe-5" onClick={()=>setshowApplyLoanModal(true)}>Apply Now</button>
               </div>
          </div>
           </div>
@@ -23,20 +23,10 @@ export const DashboardPage: React.FC = () => {
         </div>
       </div>
       {/* end::Row */}
-
-      {/* begin::Row */}
-      <div className="row g-0 g-xl-5 g-xxl-8">
-      </div>
-      {/* end::Row */}
-
-      {/* begin::Row */}
-      <div className="row g-0 g-xl-5 g-xxl-8">
-      </div>
-      {/* end::Row */}
         {/* begin::Modals */}
         <ApplyLoanModal
-        show={showCreateAppModal}
-        handleClose={() => setShowCreateAppModal(false)}
+        show={showApplyLoanModal}
+        handleClose={() => setShowApplyLoanModal(false)}
       />
       {/* end::Modals */}
     </>
