@@ -81,5 +81,5 @@ export function calculateLoan(
 
 //get user's loan
 export function getMyloans(uuid:any){
-  return axios.get<LoanModel[]>(`${LOANS_URL}`);
+  return axios.get<LoanModel[]>(`${LOANS_URL}${uuid}`);
 }

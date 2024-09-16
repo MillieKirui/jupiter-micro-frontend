@@ -13,24 +13,6 @@ type Props = {
   show: boolean;
   handleClose: () => void;
 };
-// const loanCalculation = ()=>{
-//   const{values} = useFormikContext();
-//     /* const { loanAmount, loanTerm, paymentFrequency } = req.body; */
-//     const [loanAmount, setLoanAmount] = useState(0);
-//     const[loanTerm, setLoanTerm]= useState(0);
-//     const [paymentFrequency,setPaymentFrequency]= useState("");
-  
-//     /* Calculate interest*/
-//     useEffect(()=>{
-//         const result = calculateLoan(loanAmount, loanTerm, paymentFrequency);
-//         console.log(res)
-//     },[values?.loanAmount, values.loanTerm, values.paymentFrequency]);
-//   return(
-//     <div>
-//       interest
-//     </div>
-//   )
-// }
 
 const initialValues = {
   firstName: "",
@@ -59,14 +41,10 @@ const initialValues = {
 };
 
 const applicationSchema = Yup.object().shape({
-  firstName: Yup.string()
+  fullName: Yup.string()
     .min(3, "Minimum 3 symbols")
     .max(50, "Maximum 50 symbols")
-    .required("First name is required"),
-  lastName: Yup.string()
-    .min(3, "Minimum 3 symbols")
-    .max(50, "Maximum 50 symbols")
-    .required("Last name is required")
+    .required("First name is required")
 });
 
 const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
@@ -95,14 +73,12 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
     initialValues,
     validationSchema: applicationSchema,
     onSubmit: (values, { setStatus, setSubmitting }) => {
-      console.log(values);
-      const fullName = `${values.firstName} ${values.lastName}`;
       setLoading(true);
       setTimeout(() => {
         applyLoan(
           values.firstName,
           values.lastName,
-          fullName,
+          values.fullName,
           values.phoneNumber,
           values.idNumber,
           values.maritalStatus,
@@ -333,44 +309,16 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                     </div>
                     {/*begin::Heading */}
                     <div className="row mb-5">
-                      {/* begin::Form group Firstname */}
-                      <div className="col-md-6 fv-row">
-                        <label className="form-label fs-6 fw-bolder text-dark pt-5">
-                          First name
-                        </label>
-                        <input
-                          placeholder="First name"
-                          type="text"
-                          autoComplete="on"
-                          {...formik.getFieldProps("firstName")}
-                          className={clsx(
-                            "form-control form-control-lg ",
-                            {
-                              "is-invalid": formik.touched.firstName && formik.errors.firstName,
-                            },
-                            {
-                              "is-valid": formik.touched.firstName && !formik.errors.firstName,
-                            }
-                          )}
-                        />
-                        {formik.touched.firstName && formik.errors.firstName && (
-                          <div className="fv-plugins-message-container">
-                            <div className="fv-help-block">{formik.errors.firstName}</div>
-                          </div>
-                        )}
-                      </div>
-                      {/* end::Form group */}
-
                       {/* begin::Form group Lastname */}
-                      <div className="col-md-6 fv-row">
+                      <div className="col-md-12 fv-row">
                         <label className="form-label fs-6 fw-bolder text-dark pt-5">
-                          Last Name
+                          Full Name
                         </label>
                         <input
-                          placeholder="Last name"
+                          placeholder="Enter your official names as shown on your National ID"
                           type="text"
                           autoComplete="on"
-                          {...formik.getFieldProps("lastName")}
+                          {...formik.getFieldProps("fullName")}
                           className={clsx(
                             "form-control form-control-lg ",
                             {
@@ -390,7 +338,7 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                       {/* end::Form group */}
                       </div>
                       <div className="row mb-5">
-                      {/* begin::Form group Firstname */}
+                      {/* begin::Form group Phone */}
                       <div className="col-md-6 fv-row">
                         <label className="form-label fs-6 fw-bolder text-dark pt-5">
                           Phone
@@ -700,7 +648,7 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                             className="form-check-input"
                             type="radio"
                             {...formik.getFieldProps("paymentFrequency")}
-                            value="bi-Weekly"
+                            value="bi-weekly"
                           />
                         </span>
                         <span className="fw-bolder fs-6">Bi-Weekly</span>
