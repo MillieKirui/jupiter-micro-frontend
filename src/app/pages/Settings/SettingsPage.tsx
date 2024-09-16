@@ -3,8 +3,27 @@ import React, { useEffect, useState } from "react";
 import UpdateProfileInfo from "./partials/update-profile-information";
 import UpdatePassword from "./partials/update-password-form";
 import DeleteUser from "./partials/delete-user-form";
+import { RootState } from "../../../setup";
+import { useSelector } from "react-redux";
+import { LoanModel } from "../../modules/loans/LoanModel";
+import { getMyloans } from "../../modules/application/core/requests";
+import { getUser } from "../../modules/auth/core/requests";
+import { UserModel } from "../../modules/auth/models/UserModel";
 
 export const SettingsPage: React.FC = () => {
+  const uuid = useSelector<RootState>(
+    (state) => state.auth?.uuid,
+  );
+
+  const [user, setUser] = useState<UserModel>();
+  //get user loans on mount
+  useEffect(()=>{
+      getUser(uuid).then((response)=>{
+        console.log(response);
+        setUser(response.data);
+      });
+  },[])
+
   return (
     <>
       <div className="app-main flex-column flex-row-fluid ms-5 border" id="kt_app_main">
@@ -27,7 +46,7 @@ export const SettingsPage: React.FC = () => {
 										{/* begin::Card header*/}
 										{/* begin::Content*/}
 										<div id="kt_account_settings_profile_details" className="collapse show">
-                      <UpdateProfileInfo/>
+                      <UpdateProfileInfo user_name={`${user?.firstName}${user?.lastName}`} user_email={user?.email}/>
 										</div>
 										{/* end::Content*/}
 									</div>
@@ -45,7 +64,7 @@ export const SettingsPage: React.FC = () => {
 										<div id="kt_account_settings_signin_method" className="collapse show">
 											{/* begin::Card body*/}
 											<div className="card-body border-top p-9">
-                        <UpdatePassword/>
+                        <UpdatePassword />
 											</div>
 											{/* end::Card body*/}
 										</div>

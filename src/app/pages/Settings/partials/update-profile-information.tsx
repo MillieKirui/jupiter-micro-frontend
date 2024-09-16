@@ -1,6 +1,11 @@
 import React, { useState } from 'react';
 
-const UpdateProfileInfo: React.FC = () => {
+type Props = {
+    user_name?: string;
+    user_email?: string;
+  };
+
+const UpdateProfileInfo: React.FC<Props> = ({user_name,user_email}) => {
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [statusMessage, setStatusMessage] = useState<string>('');
@@ -23,7 +28,7 @@ const UpdateProfileInfo: React.FC = () => {
                 name="name"
                 className="form-control form-control-lg form-control-solid"
                 placeholder="Name"
-                value={name}
+                value={user_name}
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
@@ -37,7 +42,7 @@ const UpdateProfileInfo: React.FC = () => {
                 name="email"
                 className="form-control form-control-lg form-control-solid"
                 placeholder="Email"
-                value={email}
+                value={user_email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               {false && (

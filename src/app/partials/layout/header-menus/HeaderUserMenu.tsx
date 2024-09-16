@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { toAbsoluteUrl } from "../../../helpers";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../setup";
 
 export function HeaderUserMenu() {
   return (
@@ -21,7 +23,7 @@ export function HeaderUserMenu() {
           </span>
         </div>
         <div className="">
-          <span className="text-info fw-bolder fs-4">Hello, Milkah</span>
+          <span className="text-info fw-bolder fs-4">Hello</span>
           <span className="text-white fw-bold fs-7 d-block">
           </span>
         </div>

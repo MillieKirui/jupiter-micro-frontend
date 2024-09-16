@@ -6,7 +6,8 @@ import * as Yup from "yup";
 import clsx from "clsx";
 import * as auth from "../core/AuthRedux";
 import { register } from "../core/requests";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
+import Swal from 'sweetalert2'
 
 const initialValues = {
   firstName: "",
@@ -49,6 +50,7 @@ const registrationSchema = Yup.object().shape({
 });
 
 export function Registration() {
+  const history = useHistory();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const formik = useFormik({
@@ -69,6 +71,16 @@ export function Registration() {
             console.log(token);
             setLoading(false);
             dispatch(auth.actions.login(token, uuid));
+            Swal.fire({
+              title: 'Success!',
+              text: 'You have successfully registered!',
+              icon: 'success',
+              confirmButtonColor: '#3085d6',
+              cancelButtonColor: '#d33', 
+              confirmButtonText: 'OK!'
+           }).then((result) => {
+            history.push('/dashboard');
+           })
           })
           .catch(() => {
             setLoading(false);

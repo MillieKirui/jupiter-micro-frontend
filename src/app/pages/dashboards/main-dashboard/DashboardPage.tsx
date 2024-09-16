@@ -5,6 +5,7 @@ import { RootState } from "../../../../setup";
 import { useSelector } from "react-redux";
 import { getMyloans } from "../../../modules/application/core/requests";
 import { LoanModel } from "../../../modules/loans/LoanModel";
+import { getUser} from "../../../modules/auth/core/requests";
 
 export const DashboardPage: React.FC = () => {
   const [showApplyLoanModal, setShowApplyLoanModal] = useState(false);
@@ -19,7 +20,10 @@ export const DashboardPage: React.FC = () => {
       getMyloans(uuid).then((response)=>{
         console.log(response);
         setLoans(response.data);
-      })
+      });
+      getUser(uuid).then((response)=>{
+        console.log(response);
+      });
   },[])
 
   return (
