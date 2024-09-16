@@ -38,7 +38,7 @@ export function HeaderUserMenu() {
         </Link>
 
         <Link
-          to="/profile/settings"
+          to="/settings"
           className="col border-bottom text-center py-10 btn btn-active-color-info rounded-0"
           data-kt-menu-dismiss="true"
         >

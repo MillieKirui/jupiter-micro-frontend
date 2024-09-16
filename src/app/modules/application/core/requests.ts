@@ -3,9 +3,11 @@ import { ApplicationModel } from "../models/ApplicationModel";
 import { number } from "yup";
 import { RootState } from "../../../../setup";
 import { useSelector } from "react-redux";
+import { LoanModel } from "../../loans/LoanModel";
 
 const API_URL = process.env.REACT_APP_API_URL || "api";
 
+export const LOANS_URL = `${API_URL}/loans/`;
 export const LOAN_APPLICATION_URL = `${API_URL}/applicants/create`;
 export const LOAN_CALCULATION_URL = `${API_URL}/loans/calculate`;
 
@@ -75,4 +77,9 @@ export function calculateLoan(
     loanTerm,
     paymentFrequency
   });
+}
+
+//get user's loan
+export function getMyloans(uuid:any){
+  return axios.get<LoanModel[]>(`${LOANS_URL}`);
 }

@@ -7,6 +7,8 @@ import { useFormik } from "formik";
 import * as auth from "../core/AuthRedux";
 import { login } from "../core/requests";
 import { toAbsoluteUrl } from "../../../helpers";
+import { useHistory } from "react-router-dom";
+
 
 const loginSchema = Yup.object().shape({
   email: Yup.string()
@@ -26,6 +28,7 @@ const initialValues = {
 };
 
 export function Login() {
+  const history = useHistory();
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const formik = useFormik({
@@ -42,6 +45,7 @@ export function Login() {
             console.log(token);
             setLoading(false);
             dispatch(auth.actions.login(token, uuid));
+            history.push('/dashboard');
           })
       }, 1000);
     },
