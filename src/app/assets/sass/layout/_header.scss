@@ -48,9 +48,9 @@
 		}
 
 		// Fixed, Scroll & Sidebar Enabled Modes
-		.header-fixed[data-kt-sticky-header="on"][data-sidebar="on"] & {
-			right: get($sidebar-config, desktop, width);
-		}
+		// .header-fixed[data-kt-sticky-header="on"][data-sidebar="on"] & {
+		// 	right: get($sidebar-config, desktop, width);
+		// }
 		
 	}
 }

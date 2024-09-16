@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { ThemeProvider } from "./layout/core";
 import { Logout } from "./modules/auth/Logout";
 import { AppRoutes} from "./routing/AppRoutes";
+import { shallowEqual, useSelector } from "react-redux";
+import { RootState } from "../setup";
 
 type Props = {
   basename: string;

@@ -1,4 +1,5 @@
 export interface AuthModel {
-  accessToken: string;
+  token: string;
+  uuid:string;
   refreshToken?: string;
 }

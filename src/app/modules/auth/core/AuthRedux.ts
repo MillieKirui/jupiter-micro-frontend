@@ -16,30 +16,34 @@ export const actionTypes = {
   UserRequested: "[Request User] Action",
   UserLoaded: "[Load User] Auth API",
   SetUser: "[Set User] Action",
+  SetUUID: "[Set UUID] Action",
 };
 
 const initialAuthState: IAuthState = {
   user: undefined,
   accessToken: undefined,
+  uuid: undefined,
 };
 
 export interface IAuthState {
   user?: UserModel;
   accessToken?: string;
+  uuid?: string;
 }
 
 export const reducer = persistReducer(
-  { storage, key: "jupiter", whitelist: ["user", "accessToken"] },
+  { storage, key: "jupiter", whitelist: ["user", "accessToken", "uuid"] },
   (state: IAuthState = initialAuthState, action: ActionWithPayload<IAuthState>) => {
     switch (action.type) {
       case actionTypes.Login: {
         const accessToken = action.payload?.accessToken;
-        return { accessToken, user: undefined };
+        const uuid = action.payload?.uuid;
+        return { ...state, accessToken, uuid, user: undefined };
       }
 
       case actionTypes.Register: {
         const accessToken = action.payload?.accessToken;
-        return { accessToken, user: undefined };
+        return { ...state, accessToken, user: undefined };
       }
 
       case actionTypes.Logout: {
@@ -67,7 +71,9 @@ export const reducer = persistReducer(
 );
 
 export const actions = {
-  login: (accessToken: string) => ({ type: actionTypes.Login, payload: { accessToken } }),
+  login: (accessToken: string, uuid: string) => {
+    return { type: actionTypes.Login, payload: { accessToken, uuid } };
+  },
   register: (accessToken: string) => ({
     type: actionTypes.Register,
     payload: { accessToken },
@@ -81,7 +87,7 @@ export const actions = {
 };
 
 export function* saga() {
-  yield takeLatest(actionTypes.Login, function* loginSaga() {
+  yield takeLatest(actionTypes.Login, function* loginSaga(action) {
     yield put(actions.requestUser());
   });
 

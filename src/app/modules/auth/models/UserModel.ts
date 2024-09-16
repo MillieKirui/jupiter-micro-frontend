@@ -6,8 +6,8 @@ export interface UserModel {
   username: string;
   password: string | undefined;
   email: string;
-  firstname: string;
-  lastname: string;
+  firstName: string;
+  lastName: string;
   fullname?: string;
   auth?: AuthModel;
   address?: UserAddressModel;

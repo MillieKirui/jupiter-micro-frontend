@@ -9,8 +9,9 @@ import { register } from "../core/requests";
 import { Link } from "react-router-dom";
 
 const initialValues = {
-  firstname: "",
-  lastname: "",
+  firstName: "",
+  lastName: "",
+  phone:"",
   email: "",
   password: "",
   changepassword: "",
@@ -18,7 +19,7 @@ const initialValues = {
 };
 
 const registrationSchema = Yup.object().shape({
-  firstname: Yup.string()
+  firstName: Yup.string()
     .min(3, "Minimum 3 symbols")
     .max(50, "Maximum 50 symbols")
     .required("First name is required"),
@@ -27,7 +28,7 @@ const registrationSchema = Yup.object().shape({
     .min(3, "Minimum 3 symbols")
     .max(50, "Maximum 50 symbols")
     .required("Email is required"),
-  lastname: Yup.string()
+  lastName: Yup.string()
     .min(3, "Minimum 3 symbols")
     .max(50, "Maximum 50 symbols")
     .required("Last name is required"),
@@ -54,17 +55,20 @@ export function Registration() {
     initialValues,
     validationSchema: registrationSchema,
     onSubmit: (values, { setStatus, setSubmitting }) => {
+      console.log(values);
       setLoading(true);
       setTimeout(() => {
         register(
           values.email,
-          values.firstname,
-          values.lastname,
+          values.firstName,
+          values.lastName,
+          values.phone,
           values.password
         )
-          .then(({ data: { accessToken } }) => {
+          .then(({ data: { token, uuid } }) => {
+            console.log(token);
             setLoading(false);
-            dispatch(auth.actions.login(accessToken));
+            dispatch(auth.actions.login(token, uuid));
           })
           .catch(() => {
             setLoading(false);
@@ -94,7 +98,7 @@ export function Registration() {
         </div>
       )}
       <div className="row mb-5">
-              {/* begin::Form group Firstname */}
+              {/* begin::Form group firstName */}
       <div className="col-md-6 fv-row">
         <label className="form-label fs-6 fw-bolder text-dark pt-5">
           First name
@@ -103,26 +107,26 @@ export function Registration() {
           placeholder="First name"
           type="text"
           autoComplete="off"
-          {...formik.getFieldProps("firstname")}
+          {...formik.getFieldProps("firstName")}
           className={clsx(
             "form-control form-control-lg form-control-solid",
             {
-              "is-invalid": formik.touched.firstname && formik.errors.firstname,
+              "is-invalid": formik.touched.firstName && formik.errors.firstName,
             },
             {
-              "is-valid": formik.touched.firstname && !formik.errors.firstname,
+              "is-valid": formik.touched.firstName && !formik.errors.firstName,
             }
           )}
         />
-        {formik.touched.firstname && formik.errors.firstname && (
+        {formik.touched.firstName && formik.errors.firstName && (
           <div className="fv-plugins-message-container">
-            <div className="fv-help-block">{formik.errors.firstname}</div>
+            <div className="fv-help-block">{formik.errors.firstName}</div>
           </div>
         )}
       </div>
       {/* end::Form group */}
 
-      {/* begin::Form group Lastname */}
+      {/* begin::Form group lastName */}
       <div className="col-md-6 fv-row">
         <label className="form-label fs-6 fw-bolder text-dark pt-5">
           Last name
@@ -131,20 +135,20 @@ export function Registration() {
           placeholder="Last name"
           type="text"
           autoComplete="off"
-          {...formik.getFieldProps("lastname")}
+          {...formik.getFieldProps("lastName")}
           className={clsx(
             "form-control form-control-lg form-control-solid",
             {
-              "is-invalid": formik.touched.lastname && formik.errors.lastname,
+              "is-invalid": formik.touched.lastName && formik.errors.lastName,
             },
             {
-              "is-valid": formik.touched.lastname && !formik.errors.lastname,
+              "is-valid": formik.touched.lastName && !formik.errors.lastName,
             }
           )}
         />
-        {formik.touched.lastname && formik.errors.lastname && (
+        {formik.touched.lastName && formik.errors.lastName && (
           <div className="fv-plugins-message-container">
-            <div className="fv-help-block">{formik.errors.lastname}</div>
+            <div className="fv-help-block">{formik.errors.lastName}</div>
           </div>
         )}
       </div>
@@ -157,22 +161,12 @@ export function Registration() {
         </label>
         <input
           placeholder="Your phone number"
-          type="email"
+          type="phone"
           autoComplete="off"
-          {...formik.getFieldProps("email")}
+          {...formik.getFieldProps("phone")}
           className={clsx(
-            "form-control form-control-lg form-control-solid",
-            { "is-invalid": formik.touched.email && formik.errors.email },
-            {
-              "is-valid": formik.touched.email && !formik.errors.email,
-            }
-          )}
+            "form-control form-control-lg form-control-solid")}
         />
-        {formik.touched.email && formik.errors.email && (
-          <div className="fv-plugins-message-container">
-            <div className="fv-help-block">{formik.errors.email}</div>
-          </div>
-        )}
       </div>
       {/* end::Form group */}
 

@@ -25,12 +25,6 @@ const initialValues = {
   password: "",
 };
 
-/*
-  Formik+YUP+Typescript:
-  https://jaredpalmer.com/formik/docs/tutorial#getfieldprops
-  https://medium.com/@maurice.de.beijer/yup-validation-and-typescript-and-formik-6c342578a20e
-*/
-
 export function Login() {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
@@ -39,9 +33,19 @@ export function Login() {
     validationSchema: loginSchema,
     onSubmit: (values, { setStatus, setSubmitting }) => {
       setLoading(true);
+      setTimeout(() => {
+        login(
+          values.email,
+          values.password
+        )
+          .then(({ data: { token, uuid } }) => {
+            console.log(token);
+            setLoading(false);
+            dispatch(auth.actions.login(token, uuid));
+          })
+      }, 1000);
     },
   });
-
   return (
     <form
       className="form w-100"
@@ -80,16 +84,15 @@ export function Login() {
       {/* end::Form group */}
 
       {/* begin::Form group */}
-      <div className="fv-row mb-10 fv-plugins-icon-container">
-        <div className="d-flex justify-content-between mt-n5">
-          <label className="form-label fs-6 fw-bolder text-dark pt-5">
-            Password
-          </label>
-        </div>
+      <div className="fv-row mb-5">
+        <label className="form-label fs-6 fw-bolder text-dark pt-5">
+          Password
+        </label>
         <input
           type="password"
+          placeholder="Password"
           autoComplete="off"
-
+          {...formik.getFieldProps("password")}
           className={clsx(
             "form-control form-control-lg form-control-solid",
             {
@@ -105,13 +108,6 @@ export function Login() {
             <div className="fv-help-block">{formik.errors.password}</div>
           </div>
         )}
-                  <Link
-            to="/auth/forgot-password"
-            className="text-danger fs-6 fw-bolder text-hover-dander pt-5"
-            id="kt_login_signin_form_password_reset_button"
-          >
-            Forgot Password ?
-          </Link>
       </div>
       {/* end::Form group */}
       
@@ -121,7 +117,7 @@ export function Login() {
         <button
           type="submit"
           id="kt_login_signin_form_submit_button"
-          className="btn-info fw-bolder fs-6 px-8 py-4 my-3 me-3 rounded"
+          className="btn btn-info fw-bolder fs-6 px-8 py-4 my-3 me-3 rounded"
           disabled={formik.isSubmitting || !formik.isValid}
         >
           {!loading && <span className="indicator-label">Log In</span>}

@@ -1,58 +1,141 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Modal } from "react-bootstrap-v5";
 import { StepperComponent } from "../../../../assets/ts/components";
-import { useFormik } from "formik";
+import { useFormik, useFormikContext } from "formik";
 import * as Yup from "yup";
 import clsx from "clsx";
+import { applyLoan, calculateLoan } from "../../../../modules/application/core/requests";
+import swal from "sweetalert";
+import { RootState } from "../../../../../setup";
+import { useSelector } from "react-redux";
 
 type Props = {
   show: boolean;
   handleClose: () => void;
 };
+// const loanCalculation = ()=>{
+//   const{values} = useFormikContext();
+//     /* const { loanAmount, loanTerm, paymentFrequency } = req.body; */
+//     const [loanAmount, setLoanAmount] = useState(0);
+//     const[loanTerm, setLoanTerm]= useState(0);
+//     const [paymentFrequency,setPaymentFrequency]= useState("");
+  
+//     /* Calculate interest*/
+//     useEffect(()=>{
+//         const result = calculateLoan(loanAmount, loanTerm, paymentFrequency);
+//         console.log(res)
+//     },[values?.loanAmount, values.loanTerm, values.paymentFrequency]);
+//   return(
+//     <div>
+//       interest
+//     </div>
+//   )
+// }
+
 const initialValues = {
-  firstname: "",
-  lastname: "",
-  email: "",
-  nationalID:"",
-  spouse:"",
-  spouseNationalID:"",
-  loanAmount:"",
+  firstName: "",
+  lastName: "",
+  fullName:"",
+  phoneNumber:"",
+  idNumber:"",
+  maritalStatus:"",
+  spouseName:"",
+  spouseIdNumber:" ",
+  village:"",
   location:"",
   county:"",
-  subcounty:"",
-  village:"",
-
-
-
+  subCounty:"",
+  businessName:"",
+  businessLocation:"",
+  nextOfKin:"",
+  nextOfKinPhone:"",
+  loanAmount:0,
+  loanTerm:1,
+  paymentFrequency:"",
+  collateralType:"",
+  collateralValue:0,
+  collateralFile:"",
+  uuid:""
 };
 
 const applicationSchema = Yup.object().shape({
-  firstname: Yup.string()
+  firstName: Yup.string()
     .min(3, "Minimum 3 symbols")
     .max(50, "Maximum 50 symbols")
     .required("First name is required"),
-  email: Yup.string()
-    .email("Wrong email format")
-    .min(3, "Minimum 3 symbols")
-    .max(50, "Maximum 50 symbols")
-    .required("Email is required"),
-  lastname: Yup.string()
+  lastName: Yup.string()
     .min(3, "Minimum 3 symbols")
     .max(50, "Maximum 50 symbols")
     .required("Last name is required")
 });
 
 const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
+
+  //get user UUID
+  const uuid = useSelector<RootState>(
+    (state) => state.auth?.uuid,
+  );
+
   const stepperRef = useRef<HTMLDivElement | null>(null);
   const stepper = useRef<StepperComponent | null>(null);
   const [hasError, setHasError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [calculationModal, showCalculationModal] = useState(false);
+  const [loanAmount, setLoanAmount] = useState(0);
+  const[loanTerm, setLoanTerm]= useState(0);
+  const [firstPaymentDate,setFirstPaymentDate]= useState("");
+  const [lastPaymentDate,setLastPaymentDate]= useState("");
+  const [numberOfPayments,setNumberOfPayments]= useState(0);
+  const [paymentFrequency,setPaymentFrequency]= useState("");
+  const [totalPayment,setTotalPayment] = useState(0);
+  const [totalInterest,setTotalInterest]= useState(0);
+  const [paymentAmount,setPaymentAmount]= useState(0);
 
   const formik = useFormik({
     initialValues,
     validationSchema: applicationSchema,
     onSubmit: (values, { setStatus, setSubmitting }) => {
+      console.log(values);
+      const fullName = `${values.firstName} ${values.lastName}`;
       setLoading(true);
+      setTimeout(() => {
+        applyLoan(
+          values.firstName,
+          values.lastName,
+          fullName,
+          values.phoneNumber,
+          values.idNumber,
+          values.maritalStatus,
+          values.spouseName,
+          values.spouseIdNumber,
+          values.village,
+          values.location,
+          values.county,
+          values.subCounty,
+          values.businessName,
+          values.businessLocation,
+          values.nextOfKin,
+          values.nextOfKinPhone,
+          values.loanAmount,
+          values.loanTerm,
+          values.paymentFrequency,
+          values.collateralType,
+          values.collateralValue,
+          values.collateralFile,
+          uuid
+
+        ).then((response) => {
+          if(response.status==201){
+            setLoading(false);
+            swal("Success!", "Your Application has Successfully been submitted!", "success");            
+          }
+        })
+          .catch(() => {
+            setLoading(false);
+            setSubmitting(false);
+            setStatus("Registration process has broken");
+          });
+      }, 1000);
     },
   });
 
@@ -60,6 +143,7 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
     stepper.current = StepperComponent.createInsance(
       stepperRef.current as HTMLDivElement
     );
+    console.log(stepper.current);
   };
 
   const prevStep = () => {
@@ -75,13 +159,38 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
     if (!stepper.current) {
       return;
     };
+    if (stepper.current.getCurrentStepIndex() === 3) {
+      const values = formik.values;
+      console.log(values.loanAmount,values.loanTerm, values.paymentFrequency);
+      calculateLoan(Number(values.loanAmount), values.loanTerm, values.paymentFrequency).then((response)=>{
+          console.log(response);
+          setLoanAmount(response.data.loanAmount);
+          setLoanTerm(response.data.loanTerm);
+          setPaymentFrequency(response.data.paymentFrequency);
+          setFirstPaymentDate(response.data.firstPaymentDate);
+          setLastPaymentDate(response.data.lastPaymentDate);
+          setNumberOfPayments(response.data.numberOfPayments);
+          setTotalInterest(response.data.totalInterest);
+          setTotalPayment(response.data.totalPayment);
+          setPaymentAmount(response.data.paymentAmount);
+      });
+      console.log(formik.values)
+      if(calculationModal){
+        showCalculationModal(false);
+        stepper.current.goNext();
+      }
+      else{
+        showCalculationModal(true);
+      }
+     return;
+   };
 
     stepper.current.goNext();
   };
 
-  const submit = () => {
-    window.location.reload();
-  };
+  // const submit = () => {
+  //   window.location.reload();
+  // };
 
   return (
     <Modal
@@ -211,6 +320,7 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                 className="pb-5 w-100 w-md-400px w-xl-500px"
                 noValidate
                 id="kt_modal_apply_loan_form"
+                onSubmit={formik.handleSubmit}
               >
                 {/*begin::Step 1 */}
                 <div className="pb-5 current" data-kt-stepper-element="content">
@@ -231,21 +341,21 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                         <input
                           placeholder="First name"
                           type="text"
-                          autoComplete="off"
-                          {...formik.getFieldProps("firstname")}
+                          autoComplete="on"
+                          {...formik.getFieldProps("firstName")}
                           className={clsx(
                             "form-control form-control-lg ",
                             {
-                              "is-invalid": formik.touched.firstname && formik.errors.firstname,
+                              "is-invalid": formik.touched.firstName && formik.errors.firstName,
                             },
                             {
-                              "is-valid": formik.touched.firstname && !formik.errors.firstname,
+                              "is-valid": formik.touched.firstName && !formik.errors.firstName,
                             }
                           )}
                         />
-                        {formik.touched.firstname && formik.errors.firstname && (
+                        {formik.touched.firstName && formik.errors.firstName && (
                           <div className="fv-plugins-message-container">
-                            <div className="fv-help-block">{formik.errors.firstname}</div>
+                            <div className="fv-help-block">{formik.errors.firstName}</div>
                           </div>
                         )}
                       </div>
@@ -254,26 +364,26 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                       {/* begin::Form group Lastname */}
                       <div className="col-md-6 fv-row">
                         <label className="form-label fs-6 fw-bolder text-dark pt-5">
-                          Last name
+                          Last Name
                         </label>
                         <input
                           placeholder="Last name"
                           type="text"
-                          autoComplete="off"
-                          {...formik.getFieldProps("lastname")}
+                          autoComplete="on"
+                          {...formik.getFieldProps("lastName")}
                           className={clsx(
                             "form-control form-control-lg ",
                             {
-                              "is-invalid": formik.touched.lastname && formik.errors.lastname,
+                              "is-invalid": formik.touched.lastName && formik.errors.lastName,
                             },
                             {
-                              "is-valid": formik.touched.lastname && !formik.errors.lastname,
+                              "is-valid": formik.touched.lastName && !formik.errors.lastName,
                             }
                           )}
                         />
-                        {formik.touched.lastname && formik.errors.lastname && (
+                        {formik.touched.lastName && formik.errors.lastName && (
                           <div className="fv-plugins-message-container">
-                            <div className="fv-help-block">{formik.errors.lastname}</div>
+                            <div className="fv-help-block">{formik.errors.lastName}</div>
                           </div>
                         )}
                       </div>
@@ -288,23 +398,12 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                         <input
                           placeholder="phone number"
                           type="text"
-                          autoComplete="off"
-                          {...formik.getFieldProps("firstname")}
+                          autoComplete="on"
+                          {...formik.getFieldProps("phoneNumber")}
                           className={clsx(
-                            "form-control form-control-lg ",
-                            {
-                              "is-invalid": formik.touched.firstname && formik.errors.firstname,
-                            },
-                            {
-                              "is-valid": formik.touched.firstname && !formik.errors.firstname,
-                            }
+                            "form-control form-control-lg "
                           )}
                         />
-                        {formik.touched.firstname && formik.errors.firstname && (
-                          <div className="fv-plugins-message-container">
-                            <div className="fv-help-block">{formik.errors.firstname}</div>
-                          </div>
-                        )}
                       </div>
                       {/* end::Form group */}
 
@@ -317,22 +416,11 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                           placeholder="national ID"
                           type="text"
                           autoComplete="off"
-                          {...formik.getFieldProps("nationalID")}
+                          {...formik.getFieldProps("idNumber")}
                           className={clsx(
-                            "form-control form-control-lg ",
-                            {
-                              "is-invalid": formik.touched.lastname && formik.errors.lastname,
-                            },
-                            {
-                              "is-valid": formik.touched.lastname && !formik.errors.lastname,
-                            }
+                            "form-control form-control-lg "
                           )}
                         />
-                        {formik.touched.lastname && formik.errors.lastname && (
-                          <div className="fv-plugins-message-container">
-                            <div className="fv-help-block">{formik.errors.lastname}</div>
-                          </div>
-                        )}
                       </div>
                       {/* end::Form group */}
                       </div>
@@ -361,8 +449,7 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                           <input
                             className="form-check-input"
                             type="radio"
-                            name="maritalStatus"
-                            value="married"
+                            {...formik.getFieldProps("maritalStatus")}
                           />
                         </span>
                         <span className="fw-bolder fs-6">Married</span>
@@ -374,24 +461,37 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                           <input
                             className="form-check-input"
                             type="radio"
-                            name="maritalStatus"
-                            value="single"
+                            {...formik.getFieldProps("maritalStatus")}
+                            value="Single"
                           />
                         </span>
                         <span className="fw-bolder fs-6">Single</span>
                       </label>
                       {/*end::Option */}
-                                 {/*begin:Option */}
-                                 <label className="d-flex align-items-center justify-content-between cursor-pointer mb-6">
+                      {/*begin:Option */}
+                      <label className="d-flex align-items-center justify-content-between cursor-pointer mb-6">
                         <span className="form-check form-check-custom form-check-solid">
                           <input
-                            className="form-check-input"
-                            type="radio"
-                            name="maritalStatus"
-                            value="divorced"
+                             className="form-check-input"
+                             type="radio"
+                            {...formik.getFieldProps("maritalStatus")}
+                            value="Divorced"
                           />
                         </span>
-                        <span className="fw-bolder fs-6">Divorced/Widow</span>
+                        <span className="fw-bolder fs-6">Divorced</span>
+                      </label>
+                      {/*end::Option */}
+                      {/*begin:Option */}
+                      <label className="d-flex align-items-center justify-content-between cursor-pointer mb-6">
+                        <span className="form-check form-check-custom form-check-solid">
+                          <input
+                             className="form-check-input"
+                             type="radio"
+                            {...formik.getFieldProps("maritalStatus")}
+                            value="Widow"
+                          />
+                        </span>
+                        <span className="fw-bolder fs-6">Widow</span>
                       </label>
                       {/*end::Option */}
                     </div>
@@ -406,22 +506,11 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                           placeholder="spouse name"
                           type="text"
                           autoComplete="off"
-                          {...formik.getFieldProps("spouse")}
+                          {...formik.getFieldProps("spouseName")}
                           className={clsx(
-                            "form-control form-control-lg ",
-                            {
-                              "is-invalid": formik.touched.firstname && formik.errors.firstname,
-                            },
-                            {
-                              "is-valid": formik.touched.firstname && !formik.errors.firstname,
-                            }
+                            "form-control form-control-lg "
                           )}
                         />
-                        {formik.touched.firstname && formik.errors.firstname && (
-                          <div className="fv-plugins-message-container">
-                            <div className="fv-help-block">{formik.errors.firstname}</div>
-                          </div>
-                        )}
                       </div>
                       {/* end::Form group */}
 
@@ -434,22 +523,11 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                           placeholder="national ID"
                           type="text"
                           autoComplete="off"
-                          {...formik.getFieldProps("spouseNationalID")}
+                          {...formik.getFieldProps("spouseIdNumber")}
                           className={clsx(
-                            "form-control form-control-lg ",
-                            {
-                              "is-invalid": formik.touched.lastname && formik.errors.lastname,
-                            },
-                            {
-                              "is-valid": formik.touched.lastname && !formik.errors.lastname,
-                            }
+                            "form-control form-control-lg "
                           )}
                         />
-                        {formik.touched.lastname && formik.errors.lastname && (
-                          <div className="fv-plugins-message-container">
-                            <div className="fv-help-block">{formik.errors.lastname}</div>
-                          </div>
-                        )}
                       </div>
                       {/* end::Form group */}
                       </div>
@@ -465,20 +543,9 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                           autoComplete="off"
                           {...formik.getFieldProps("county")}
                           className={clsx(
-                            "form-control form-control-lg ",
-                            {
-                              "is-invalid": formik.touched.firstname && formik.errors.firstname,
-                            },
-                            {
-                              "is-valid": formik.touched.firstname && !formik.errors.firstname,
-                            }
+                            "form-control form-control-lg "
                           )}
                         />
-                        {formik.touched.firstname && formik.errors.firstname && (
-                          <div className="fv-plugins-message-container">
-                            <div className="fv-help-block">{formik.errors.firstname}</div>
-                          </div>
-                        )}
                       </div>
                       {/* end::Form group */}
 
@@ -493,20 +560,9 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                           autoComplete="off"
                           {...formik.getFieldProps("sub-county")}
                           className={clsx(
-                            "form-control form-control-lg ",
-                            {
-                              "is-invalid": formik.touched.lastname && formik.errors.lastname,
-                            },
-                            {
-                              "is-valid": formik.touched.lastname && !formik.errors.lastname,
-                            }
+                            "form-control form-control-lg "
                           )}
                         />
-                        {formik.touched.lastname && formik.errors.lastname && (
-                          <div className="fv-plugins-message-container">
-                            <div className="fv-help-block">{formik.errors.lastname}</div>
-                          </div>
-                        )}
                       </div>
                       {/* end::Form group */}
                       </div>
@@ -523,20 +579,9 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                           autoComplete="off"
                           {...formik.getFieldProps("village")}
                           className={clsx(
-                            "form-control form-control-lg ",
-                            {
-                              "is-invalid": formik.touched.firstname && formik.errors.firstname,
-                            },
-                            {
-                              "is-valid": formik.touched.firstname && !formik.errors.firstname,
-                            }
+                            "form-control form-control-lg "
                           )}
                         />
-                        {formik.touched.firstname && formik.errors.firstname && (
-                          <div className="fv-plugins-message-container">
-                            <div className="fv-help-block">{formik.errors.firstname}</div>
-                          </div>
-                        )}
                       </div>
                       {/* end::Form group */}
 
@@ -551,77 +596,44 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                           autoComplete="off"
                           {...formik.getFieldProps("location")}
                           className={clsx(
-                            "form-control form-control-lg ",
-                            {
-                              "is-invalid": formik.touched.lastname && formik.errors.lastname,
-                            },
-                            {
-                              "is-valid": formik.touched.lastname && !formik.errors.lastname,
-                            }
+                            "form-control form-control-lg "
                           )}
                         />
-                        {formik.touched.lastname && formik.errors.lastname && (
-                          <div className="fv-plugins-message-container">
-                            <div className="fv-help-block">{formik.errors.lastname}</div>
-                          </div>
-                        )}
                       </div>
                       {/* end::Form group */}
                       </div>
                       <div className="row mb-5">
-                       {/* begin::Form group Firstname */}
+                       {/* begin::Form group nextOfKin */}
                        <div className="col-md-6 fv-row">
                         <label className="form-label fs-6 fw-bolder text-dark pt-5">
                           Next of kin
                         </label>
                         <input
-                          placeholder="phone number"
+                          placeholder=""
                           type="text"
                           autoComplete="off"
-                          {...formik.getFieldProps("firstname")}
+                          {...formik.getFieldProps("nextOfKin")}
                           className={clsx(
-                            "form-control form-control-lg ",
-                            {
-                              "is-invalid": formik.touched.firstname && formik.errors.firstname,
-                            },
-                            {
-                              "is-valid": formik.touched.firstname && !formik.errors.firstname,
-                            }
+                            "form-control form-control-lg "
                           )}
                         />
-                        {formik.touched.firstname && formik.errors.firstname && (
-                          <div className="fv-plugins-message-container">
-                            <div className="fv-help-block">{formik.errors.firstname}</div>
-                          </div>
-                        )}
                       </div>
                       {/* end::Form group */}
 
-                      {/* begin::Form group Lastname */}
+                      {/* begin::Form group nextOfKinPhone */}
                       <div className="col-md-6 fv-row">
                         <label className="form-label fs-6 fw-bolder text-dark pt-5">
                           Phone Number
                         </label>
                         <input
-                          placeholder="Last name"
+                          placeholder=""
                           type="text"
                           autoComplete="off"
-                          {...formik.getFieldProps("lastname")}
+                          {...formik.getFieldProps("nextOfKinPhone")}
                           className={clsx(
-                            "form-control form-control-lg ",
-                            {
-                              "is-invalid": formik.touched.lastname && formik.errors.lastname,
-                            },
-                            {
-                              "is-valid": formik.touched.lastname && !formik.errors.lastname,
-                            }
+                            "form-control form-control-lg "
                           )}
                         />
-                        {formik.touched.lastname && formik.errors.lastname && (
-                          <div className="fv-plugins-message-container">
-                            <div className="fv-help-block">{formik.errors.lastname}</div>
-                          </div>
-                        )}
                       </div>
                       {/* end::Form group */}
                       </div>
@@ -641,117 +653,129 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                         Amount Confirmation
                       </h3>
                     </div>
-                    {/*begin::Heading */}
+                    {/*end::Heading */}
 
                     {/*begin::Form Group */}
-                     {/*begin::Form Group */}
-                     <div className="d-flex gap-15">
-                      <label>
-                      Repayment Frequency
-                      </label>
-                      {/*begin:Option */}
-                      <label className="d-flex align-items-center justify-content-between cursor-pointer mb-6">
-                        <span className="form-check form-check-custom form-check-solid">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name="frequency"
-                            value="married"
-                          />
-                        </span>
-                        <span className="fw-bolder fs-6">Monthly</span>
-                      </label>
-                      {/*end::Option */}
-                                 {/*begin:Option */}
-                                 <label className="d-flex align-items-center justify-content-between cursor-pointer mb-6">
-                        <span className="form-check form-check-custom form-check-solid">
-                          <input
-                            className="form-check-input"
-                            type="radio"
-                            name="maritalStatus"
-                            value="single"
-                          />
-                        </span>
-                        <span className="fw-bolder fs-6">Weekly</span>
-                      </label>
-                      {/*end::Option */}
-
-                    </div>
-                    {/*end::Form Group */}
-                    {/* begin::Form group Phone */}
-                        <div className="fv-row mb-5">
+                    {/* begin::Form group Loan Amount */}
+                    <div className="fv-row mb-5">
                       <label className="form-label fs-6 fw-bolder text-dark pt-5">
-                      Loan Applied
+                      Loan Amount
                       </label>
                       <input
                         placeholder="loan amount"
                         type="text"
                         autoComplete="off"
                         {...formik.getFieldProps("loanAmount")}
-                      />
-                      {formik.touched.email && formik.errors.email && (
-                        <div className="fv-plugins-message-container">
-                          <div className="fv-help-block">{formik.errors.email}</div>
-                        </div>
-                      )}
-                    </div>
-                    {/* end::Form group */}   
-                     {/* begin::Form group Phone */}
-                     <div className="fv-row mb-5">
-                      <label className="form-label fs-6 fw-bolder text-dark pt-5">
-                      Total Repayment Amount(Words)
-                      </label>
-                      <input
-                        placeholder="total repayment amount"
-                        type="text"
-                        autoComplete="off"
-                        {...formik.getFieldProps("totalRepayment")}
                         className={clsx(
-                          "form-control form-control-lg ",
-                          { "is-invalid": formik.touched.email && formik.errors.email },
-                          {
-                            "is-valid": formik.touched.email && !formik.errors.email,
-                          }
+                          "form-control form-control-lg "
                         )}
                       />
-                      {formik.touched.email && formik.errors.email && (
-                        <div className="fv-plugins-message-container">
-                          <div className="fv-help-block">{formik.errors.email}</div>
-                        </div>
-                      )}
                     </div>
                     {/* end::Form group */} 
-                     {/* begin::Form group Phone */}
+                     {/* begin::Form group Loan Term */}
                      <div className="fv-row mb-5">
                       <label className="form-label fs-6 fw-bolder text-dark pt-5">
-                        Repayment Amount per week(Words)
+                        Loan Term
                       </label>
                       <input
-                        placeholder="frequency amount"
+                        placeholder="loan term"
                         type="text"
                         autoComplete="off"
-                        {...formik.getFieldProps("frequencyamount")}
+                        {...formik.getFieldProps("loanTerm")}
                         className={clsx(
-                          "form-control form-control-lg ",
-                          { "is-invalid": formik.touched.email && formik.errors.email },
-                          {
-                            "is-valid": formik.touched.email && !formik.errors.email,
-                          }
+                          "form-control form-control-lg "
                         )}
                       />
-                      {formik.touched.email && formik.errors.email && (
-                        <div className="fv-plugins-message-container">
-                          <div className="fv-help-block">{formik.errors.email}</div>
-                        </div>
-                      )}
                     </div>
-                    {/* end::Form group */}                  
+                    {/* end::Form group */}  
+                    {/*begin::Form Group Repayment frequency */}
+                    <div className="d-flex gap-15">
+                      <label>
+                      Repayment Frequency
+                      </label>
+                       {/*begin:Option */}
+                       <label className="d-flex align-items-center justify-content-between cursor-pointer mb-6">
+                        <span className="form-check form-check-custom form-check-solid">
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            {...formik.getFieldProps("paymentFrequency")}
+                            value="bi-Weekly"
+                          />
+                        </span>
+                        <span className="fw-bolder fs-6">Bi-Weekly</span>
+                      </label>
+                      {/*end::Option */}
+                      {/*begin:Option */}
+                      <label className="d-flex align-items-center justify-content-between cursor-pointer mb-6">
+                        <span className="form-check form-check-custom form-check-solid">
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            {...formik.getFieldProps("paymentFrequency")}
+                            value="weekly"                         
+                          />
+                        </span>
+                        <span className="fw-bolder fs-6">Weekly</span>
+                      </label>
+                      {/*end::Option */}
+                      {/*begin:Option */}
+                      <label className="d-flex align-items-center justify-content-between cursor-pointer mb-6">
+                        <span className="form-check form-check-custom form-check-solid">
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            {...formik.getFieldProps("paymentFrequency")}
+                            value="monthly"
+                          />
+                        </span>
+                        <span className="fw-bolder fs-6">Monthly</span>
+                      </label>
+                      {/*end::Option */}
+                    </div>
+                    {/*end::Form Group */}                
                     {/*end::Form Group */}
-
+                    {/* start:: calculation section */}
+                    {calculationModal&&(
+                      <div className="card card-custom border border-info">
+                      <div className="card border">
+                          <span className="mb-0 p-0 text-info ms-2 fw-bolder ">!Your Loan Details</span>
+                          <span className="fs-8 text-grey ms-2" >Kindly check before proceeding</span>
+                      </div>
+                      <div className="card-body border">
+                      <div className="mb-3">
+                        Total Payment:<span className="text-info fw-bolder ms-2">{totalPayment}</span>
+                      </div>
+                      <div className="mb-3">
+                        Total Interest :<span className="text-info fw-bolder ms-2">{totalInterest}</span>
+                      </div>
+                      <div className="mb-3">
+                        Frequency :<span className="text-info fw-bolder ms-2">{paymentFrequency}</span>
+                      </div>
+                      <div className="mb-3">
+                        Number of payments :<span className="text-info fw-bolder ms-2">{numberOfPayments}</span>
+                      </div>
+                      <div className="mb-3">
+                        Payment amount {paymentFrequency} :<span className="text-info fw-bolder ms-2">{paymentAmount}</span>
+                      </div>
+                      <div className="mb-3">
+                        First Repayment Date :<span className="text-info fw-bolder ms-2">{firstPaymentDate}</span>
+                      </div>
+                      <div className="mb-3">
+                        Last Repayment Date :<span className="text-info fw-bolder ms-2">{lastPaymentDate}</span>
+                      </div>
+                    </div>
+                      <div className="mt-2 ms-2">
+                        <button className="btn btn-sm btn-light-info" onClick={()=>showCalculationModal(false)}>Change Details</button>
+                        <br/>
+                        <span className="text-mute fw-8">You can click here to remain on this section and change your details. Otherwise click <span className="text-info">Continue</span> to proceed</span>
+                      </div>
+                      </div>  
+                    )}
+                    {/*end::calculation section */}               
                   </div>
                 </div>
                 {/*end::Step 3 */}
-
                 {/*begin::Step 4 */}
                 <div className="pb-5" data-kt-stepper-element="content">
                   <div className="w-100">
@@ -764,30 +788,53 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                     {/*begin::Heading */}
 
                     {/*begin::Form Group */}
-                      {/* begin::Form group Phone */}
-                      <div className="fv-row mb-5">
+                     {/* begin::Form group Collatoral Type */}
+                     <div className="fv-row mb-5">
+                      <label className="form-label fs-6 fw-bolder text-dark pt-5">
+                      Collatoral Type
+                      </label>
+                      <input
+                        placeholder=""
+                        type="text"
+                        autoComplete="off"
+                        {...formik.getFieldProps("collateralType")}
+                        className={clsx(
+                          "form-control form-control-lg "
+                        )}
+                      />
+                    </div>
+                    {/* end::Form group */} 
+                    {/* begin::Form group Collatoral Value */}
+                    <div className="fv-row mb-5">
                       <label className="form-label fs-6 fw-bolder text-dark pt-5">
                       Value
                       </label>
                       <input
-                        placeholder="valuer"
+                        placeholder=""
                         type="text"
                         autoComplete="off"
-                        {...formik.getFieldProps("securityvalue")}
+                        {...formik.getFieldProps("collateralValue")}
+                        className={clsx(
+                          "form-control form-control-lg "
+                        )}
                       />
-                      {formik.touched.email && formik.errors.email && (
-                        <div className="fv-plugins-message-container">
-                          <div className="fv-help-block">{formik.errors.email}</div>
-                        </div>
-                      )}
                     </div>
                     {/* end::Form group */} 
-                          {/*begin::Input group */}
-                <div className="d-flex flex-column mb-10 fv-row">
-                    <label className="fs-6 fw-semibold mb-1">Description</label>
-                    <textarea className="form-control " rows={3} name="message" placeholder=""></textarea>
-                </div>
-                {/*end::Input group */} 
+                       {/* begin::Form group Collatoral Value */}
+                       <div className="fv-row mb-5">
+                      <label className="form-label fs-6 fw-bolder text-dark pt-5">
+                      File
+                      </label>
+                      <input
+                        type="file"
+                        autoComplete="off"
+                        {...formik.getFieldProps("collateralFile")}
+                        className={clsx(
+                          "form-control form-control-lg "
+                        )}
+                      />
+                    </div>
+                    {/* end::Form group */} 
                 
                     {/*end::Form Group */}
                   </div>
@@ -851,12 +898,21 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                   </div>
                   <div>
                     <button
-                      type="button"
-                      className="btn btn-lg btn-info fw-bolder py-4 ps-8 me-3"
+                      type="submit"
+                      id="kt_login_signup_form_submit_button"
+                      className="btn-info fw-bolder fs-6 px-8 py-4 my-3 me-4 rounded"
                       data-kt-stepper-action="submit"
-                      onClick={submit}
+                      disabled={
+                        formik.isSubmitting
+                      }
                     >
-                      Submit{" "}
+                      {!loading && <span className="indicator-label"> Submit{" "}</span>}
+                      {loading && (
+                        <span className="indicator-progress" style={{ display: "block" }}>
+                          Please wait...{" "}
+                          <span className="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
+                      )}
                     </button>
 
                     <button
