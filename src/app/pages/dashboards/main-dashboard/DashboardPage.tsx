@@ -2,14 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { ApplyLoanModal } from "../_modals/apply-loan-stepper/ApplyLoanModal";
 import { RootState } from "../../../../setup";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { getMyloans } from "../../../modules/application/core/requests";
 import { LoanModel } from "../../../modules/loans/LoanModel";
 import { getUser} from "../../../modules/auth/core/requests";
-import { setCurrentUser } from "../../../../setup/redux/UserSlice";
 
 export const DashboardPage: React.FC = () => {
-  const dispatch = useDispatch();
   const [showApplyLoanModal, setShowApplyLoanModal] = useState(false);
   //get user UUID
   const uuid = useSelector<RootState>(
@@ -29,7 +27,7 @@ export const DashboardPage: React.FC = () => {
           }
       })
       getUser(uuid).then((response)=>{
-        dispatch(setCurrentUser(response.data));
+        console.log(response);
       });
   },[])
 

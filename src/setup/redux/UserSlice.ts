@@ -1,18 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+
+interface UserState {
+    currentUser: {AuthModel} | null;
+}
+
+const initialState: UserState = {
+    currentUser: null,
+};
 
 export const UserSlice = createSlice({
-    name:'user',
-    initialState: {
-        currentUser: null
-    },
-    reducers:{
-        setCurrentUser: (state, action) =>{
+    name: 'user',
+    initialState,
+    reducers: {
+        setCurrentUser: (state, action: PayloadAction<UserState['currentUser']>) => {
             state.currentUser = action.payload;
+        },
+        clearCurrentUser: (state) => {
+            state.currentUser = null;
         }
     }
+});
 
-})
-
-export const {setCurrentUser} = UserSlice.actions;
-
+export const { setCurrentUser, clearCurrentUser } = UserSlice.actions;
 export default UserSlice.reducer;

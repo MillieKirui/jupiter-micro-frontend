@@ -4,7 +4,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../setup";
 
 export function HeaderUserMenu() {
-  const user = useSelector((state:any)=> state.action.currentUser);
+  const user= useSelector<RootState>(
+    (state) => state.auth.user
+  );
+  console.log(user);
   return (
     <div
       className="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold w-200px"
@@ -24,7 +27,7 @@ export function HeaderUserMenu() {
           </span>
         </div>
         <div className="">
-          <span className="text-info fw-bolder fs-4">Hello {user.name}</span>
+          <span className="text-info fw-bolder fs-4">Hello {}</span>
           <span className="text-white fw-bold fs-7 d-block">
           </span>
         </div>
