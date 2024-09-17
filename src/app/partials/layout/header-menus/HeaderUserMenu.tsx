@@ -27,7 +27,7 @@ export function HeaderUserMenu() {
           </span>
         </div>
         <div className="">
-          <span className="text-info fw-bolder fs-4">Hello {}</span>
+          <span className="text-info fw-bolder fs-4">Hello</span>
           <span className="text-white fw-bold fs-7 d-block">
           </span>
         </div>
