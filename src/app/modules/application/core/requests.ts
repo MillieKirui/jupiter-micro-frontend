@@ -7,7 +7,7 @@ import { LoanModel } from "../../loans/LoanModel";
 
 const API_URL = process.env.REACT_APP_API_URL || "api";
 
-export const LOANS_URL = `${API_URL}/loans/`;
+export const LOANS_URL = `${API_URL}/loans/loans/`;
 export const LOAN_APPLICATION_URL = `${API_URL}/applicants/create`;
 export const LOAN_CALCULATION_URL = `${API_URL}/loans/calculate`;
 
