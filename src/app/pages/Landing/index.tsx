@@ -14,7 +14,7 @@ export function LandingPage() {
     <>
        <div
       id="kt_header"
-      className="header pt-10 shadow"
+      className="header pt-10 border"
       data-kt-sticky="true"
       data-kt-sticky-name="header"
       data-kt-sticky-offset="{default: '200px', lg: false}"
