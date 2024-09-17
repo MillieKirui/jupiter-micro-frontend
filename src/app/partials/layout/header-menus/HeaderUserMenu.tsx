@@ -4,9 +4,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../setup";
 
 export function HeaderUserMenu() {
+  const user = useSelector((state:any)=> state.action.currentUser);
   return (
     <div
-      className="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold w-300px"
+      className="menu menu-sub menu-sub-dropdown menu-column menu-rounded menu-gray-600 menu-state-bg-light-primary fw-bold w-200px"
       data-kt-menu="true"
     >
       <div
@@ -23,37 +24,32 @@ export function HeaderUserMenu() {
           </span>
         </div>
         <div className="">
-          <span className="text-info fw-bolder fs-4">Hello</span>
+          <span className="text-info fw-bolder fs-4">Hello {user.name}</span>
           <span className="text-white fw-bold fs-7 d-block">
           </span>
         </div>
       </div>
 
       {/* begin::Row */}
-      <div className="row row-cols-2 g-0">
-        <Link
-          to="/profile"
-          className="border-bottom border-end text-center py-10 btn btn-active-color-info rounded-0"
-          data-kt-menu-dismiss="true"
-        >
-          <span className="  fw-bolder fs-6 d-block pt-3">My Profile</span>
-        </Link>
-
+      <div className="justify-content-center align-items-center">
+        <div className="border">
         <Link
           to="/settings"
-          className="col border-bottom text-center py-10 btn btn-active-color-info rounded-0"
+          className="col border-bottom text-center p-5 btn btn-active-color-info rounded-0"
           data-kt-menu-dismiss="true"
         >
-          <i className="far fa-settings fs-2x"></i>
-          <span className="fw-bolder fs-6 d-block pt-3">Settings</span>
+          <span className="fw-bolder fs-6 d-block text-center">Settings</span>
         </Link>
-        <Link
-          to="/logout"
-          className="col text-center py-10 btn btn-active-color-info rounded-0"
-          data-kt-menu-dismiss="true"
-        >
-          <span className="fw-bolder fs-6 d-block pt-3">Sign Out</span>
-        </Link>
+        </div>
+        <div className="border justify-content-center align-items-center">
+          <Link
+            to="/logout"
+            className=" p-5 btn btn-active-color-info rounded-0"
+            data-kt-menu-dismiss="true"
+          >
+            <span className="fw-bolder fs-6 d-block text-center">Sign Out</span>
+          </Link>
+        </div>
       </div>
       {/* end::Row */}
     </div>

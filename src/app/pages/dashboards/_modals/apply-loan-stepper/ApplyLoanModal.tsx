@@ -102,6 +102,7 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
 
         ).then((response) => {
           if(response.status==201){
+            console.log(response);
             setLoading(false);
             swal("Success!", "Your Application has Successfully been submitted!", "success");            
           }
