@@ -70,7 +70,7 @@ export function Registration() {
           .then(({ data: { token, uuid } }) => {
             console.log(token);
             setLoading(false);
-            dispatch(auth.actions.login(token, uuid));
+            //dispatch(auth.actions.login(token, uuid,role));
             Swal.fire({
               title: 'Success!',
               text: 'You have successfully registered!',
@@ -79,7 +79,7 @@ export function Registration() {
               cancelButtonColor: '#d33', 
               confirmButtonText: 'OK!'
            }).then((result) => {
-            history.push('/dashboard');
+            history.push('/auth');
            })
           })
           .catch(() => {

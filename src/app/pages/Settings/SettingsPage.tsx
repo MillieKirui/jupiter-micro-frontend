@@ -5,8 +5,6 @@ import UpdatePassword from "./partials/update-password-form";
 import DeleteUser from "./partials/delete-user-form";
 import { RootState } from "../../../setup";
 import { useSelector } from "react-redux";
-import { LoanModel } from "../../modules/loans/LoanModel";
-import { getMyloans } from "../../modules/application/core/requests";
 import { getUser } from "../../modules/auth/core/requests";
 import { UserModel } from "../../modules/auth/models/UserModel";
 

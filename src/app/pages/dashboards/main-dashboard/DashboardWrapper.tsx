@@ -1,12 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React, { Children, useEffect } from "react";
 import {
   IThemeConfig,
   useTheme,
   getConfig,
   PageTitle,
 }from "../../../layout/core";
-import { DashboardPage } from "./DashboardPage";
+
+interface DashboardWrapperProps {
+  children: React.ReactNode; 
+}
 
 const defaultPageConfig = getConfig();
 const dashboardPageConfig: Partial<IThemeConfig> = {
@@ -28,7 +31,7 @@ const dashboardPageConfig: Partial<IThemeConfig> = {
   },
 };
 
-export function DashboardWrapper() {
+const DashboardWrapper: React.FC<DashboardWrapperProps>=({children})=> {
   const { setTheme } = useTheme();
   // Refresh UI after config updates
   useEffect(() => {
@@ -40,8 +43,8 @@ export function DashboardWrapper() {
 
   return (
     <>
-      <DashboardPage />
-      <PageTitle>Dashboard</PageTitle>
+      {children}
     </>
   );
 }
+export default DashboardWrapper;

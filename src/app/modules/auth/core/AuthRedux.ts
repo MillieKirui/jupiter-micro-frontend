@@ -17,18 +17,21 @@ export const actionTypes = {
   UserLoaded: "[Load User] Auth API",
   SetUser: "[Set User] Action",
   SetUUID: "[Set UUID] Action",
+  SetRole: "[Set Role] Action",
 };
 
 const initialAuthState: IAuthState = {
   user: undefined,
   accessToken: undefined,
   uuid: undefined,
+  role: undefined
 };
 
 export interface IAuthState {
   user?: UserModel;
   accessToken?: string;
   uuid?: string;
+  role?: string;
 }
 
 export const reducer = persistReducer(
@@ -38,7 +41,8 @@ export const reducer = persistReducer(
       case actionTypes.Login: {
         const accessToken = action.payload?.accessToken;
         const uuid = action.payload?.uuid;
-        return { ...state, accessToken, uuid, user: undefined };
+        const role = action.payload?.role;
+        return { ...state, accessToken, uuid,role, user: undefined };
       }
 
       case actionTypes.Register: {
@@ -71,8 +75,8 @@ export const reducer = persistReducer(
 );
 
 export const actions = {
-  login: (accessToken: string, uuid: string) => {
-    return { type: actionTypes.Login, payload: { accessToken, uuid } };
+  login: (accessToken: string, uuid: string, role: string) => {
+    return { type: actionTypes.Login, payload: { accessToken, uuid,role } };
   },
   register: (accessToken: string) => ({
     type: actionTypes.Register,

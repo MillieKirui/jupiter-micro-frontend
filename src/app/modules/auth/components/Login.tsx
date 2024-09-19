@@ -5,9 +5,10 @@ import clsx from "clsx";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as auth from "../core/AuthRedux";
-import { login } from "../core/requests";
+import { getUser, login } from "../core/requests";
 import { toAbsoluteUrl } from "../../../helpers";
 import { useHistory } from "react-router-dom";
+import { UserModel } from "../models/UserModel";
 
 
 const loginSchema = Yup.object().shape({
@@ -30,6 +31,7 @@ const initialValues = {
 export function Login() {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
+  const [role, setRole] = useState<string>("");
   const dispatch = useDispatch();
   const formik = useFormik({
     initialValues,
@@ -44,8 +46,21 @@ export function Login() {
           .then(({ data: { token, uuid } }) => {
             console.log(token);
             setLoading(false);
-            dispatch(auth.actions.login(token, uuid));
-            history.push('/dashboard');
+            getUser(uuid).then((response)=>{
+              dispatch(auth.actions.setUser(response.data));
+              const user = response.data;
+              if(user.role){
+                setRole(user.role);
+                console.log(response.data.role);
+                dispatch(auth.actions.login(token, uuid,user.role));
+              }
+              if(user.role=="admin"){
+                history.push('/admin');
+              }
+              else{
+                history.push('/dashboard');
+              }
+            });
           })
       }, 1000);
     },

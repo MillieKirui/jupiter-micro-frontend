@@ -3,6 +3,7 @@ import { UserAddressModel } from "./UserAddressModel";
 
 export interface UserModel {
   id: number;
+  uuid:string;
   username: string;
   password: string | undefined;
   email: string;
@@ -11,4 +12,5 @@ export interface UserModel {
   fullname?: string;
   auth?: AuthModel;
   address?: UserAddressModel;
+  role?:string;
 }

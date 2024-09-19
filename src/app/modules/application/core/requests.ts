@@ -1,13 +1,11 @@
 import axios from "axios";
 import { ApplicationModel } from "../models/ApplicationModel";
-import { number } from "yup";
-import { RootState } from "../../../../setup";
-import { useSelector } from "react-redux";
-import { LoanModel } from "../../loans/LoanModel";
+import { LoanModel } from "../models/LoanModel";
+
 
 const API_URL = process.env.REACT_APP_API_URL || "api";
 
-export const LOANS_URL = `${API_URL}/loans/loans/`;
+export const LOANS_URL = `${API_URL}/loans`;
 export const LOAN_APPLICATION_URL = `${API_URL}/applicants/create`;
 export const LOAN_CALCULATION_URL = `${API_URL}/loans/calculate`;
 
@@ -81,5 +79,18 @@ export function calculateLoan(
 
 //get user's loan
 export function getMyloans(uuid:any){
-  return axios.get<LoanModel[]>(`${LOANS_URL}${uuid}`);
+  return axios.get<LoanModel[]>(`${LOANS_URL}/loans/${uuid}`);
+}
+
+export function getLoanById(uuid:any){
+  return axios.get<LoanModel>(`${LOANS_URL}/${uuid}`);
+}
+
+//update loan
+export function updateLoanStatus(uuid:any, approvalStatus:string) {
+  return axios.patch<LoanModel>(`${LOANS_URL}/${uuid}`,{approvalStatus});
+}
+
+export function getLoans() {
+  return axios.get<LoanModel[]>(`${LOANS_URL}`);
 }

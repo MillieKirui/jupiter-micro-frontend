@@ -1,5 +1,8 @@
 import React, { useRef, useEffect } from "react";
 import { AsideMenuMain } from "./AsideMenuMain";
+import { AsideMenuAdmin } from "./AsideMenuAdmin";
+import { RootState } from "../../../../setup";
+import { useSelector } from "react-redux";
 
 type Props = {
   menuType: "main";
@@ -20,6 +23,9 @@ const AsideMenu: React.FC<Props> = ({ menuType, asidePrimaryDisplay }) => {
     }
 
   }, [asidePrimaryDisplay]);
+  const role = useSelector<RootState>(
+    ({ auth }) => auth.role
+  );
   return (
     <div
       className="menu menu-column menu-rounded menu-title-gray-700 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-gray-500 fw-bold fs-6 ms-5"
@@ -35,7 +41,11 @@ const AsideMenu: React.FC<Props> = ({ menuType, asidePrimaryDisplay }) => {
         data-kt-scroll-offset="10px"
       >
         <div className="menu-wrapper menu-column menu-fit">
-          {menuType === "main" && <AsideMenuMain />}
+          {role ==="admin" ?
+              menuType === "main" && <AsideMenuAdmin />
+              :
+              menuType === "main" && <AsideMenuMain />
+          }
         </div>
       </div>
     </div>

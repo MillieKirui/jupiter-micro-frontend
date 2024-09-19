@@ -5,8 +5,8 @@ import {
   useTheme,
   getConfig,
   PageTitle,
-}from "../../layout/core";
-import { SecurityItemsPage } from "./SecurityItemsPage";
+}from "../../../layout/core";
+import { AdminDashboard } from "./AdminDashboard";
 
 const defaultPageConfig = getConfig();
 const dashboardPageConfig: Partial<IThemeConfig> = {
@@ -28,7 +28,7 @@ const dashboardPageConfig: Partial<IThemeConfig> = {
   },
 };
 
-export function SecurityItemsPageWrapper() {
+export function AdminDashboardWrapper() {
   const { setTheme } = useTheme();
   // Refresh UI after config updates
   useEffect(() => {
@@ -40,8 +40,8 @@ export function SecurityItemsPageWrapper() {
 
   return (
     <>
-      <SecurityItemsPage />
-      <PageTitle>SecurityItems</PageTitle>
+      <AdminDashboard />
+      <PageTitle>Dashboard</PageTitle>
     </>
   );
 }

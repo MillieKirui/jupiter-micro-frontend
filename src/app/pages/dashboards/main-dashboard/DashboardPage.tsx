@@ -4,8 +4,8 @@ import { ApplyLoanModal } from "../_modals/apply-loan-stepper/ApplyLoanModal";
 import { RootState } from "../../../../setup";
 import { useSelector } from "react-redux";
 import { getMyloans } from "../../../modules/application/core/requests";
-import { LoanModel } from "../../../modules/loans/LoanModel";
 import { getUser} from "../../../modules/auth/core/requests";
+import { LoanModel } from "../../../modules/application/models/LoanModel";
 
 export const DashboardPage: React.FC = () => {
   const [showApplyLoanModal, setShowApplyLoanModal] = useState(false);
@@ -15,6 +15,7 @@ export const DashboardPage: React.FC = () => {
   );
 
   const [loans, setLoans] = useState<LoanModel[]>([]);
+
   //get user loans on mount
   useEffect(()=>{
       getMyloans(uuid).then((response)=>{

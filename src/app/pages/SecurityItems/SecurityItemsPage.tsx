@@ -4,7 +4,7 @@ import { ApplyLoanModal } from "../dashboards/_modals/apply-loan-stepper/ApplyLo
 import { useSelector } from "react-redux";
 import { RootState } from "../../../setup";
 import { getMyloans } from "../../modules/application/core/requests";
-import { LoanModel } from "../../modules/loans/LoanModel";
+import { LoanModel } from "../../modules/application/models/LoanModel";
 
 export const SecurityItemsPage: React.FC = () => {
   const [showApplyLoanModal, setShowApplyLoanModal] = useState(false);
@@ -16,10 +16,15 @@ export const SecurityItemsPage: React.FC = () => {
     const [loans, setLoans] = useState<LoanModel[]>([]);
     //get user loans on mount
     useEffect(()=>{
-        getMyloans(uuid).then((response)=>{
-          console.log(response);
-          setLoans(response.data);
-        })
+      getMyloans(uuid).then((response)=>{
+        setLoans(response.data);
+        console.log(response.status);
+      }).catch((error)=>{
+          console.log(error);
+          if(error.status==404){
+            setLoans([]);
+          }
+      })
     },[])
   return (
     <>
@@ -49,9 +54,7 @@ export const SecurityItemsPage: React.FC = () => {
    
         </div>
       </div>
-      {/* end::Row */}
-
-      
+      {/* end::Row */}     
         {/* begin::Modals */}
         <ApplyLoanModal
         show={showApplyLoanModal}
