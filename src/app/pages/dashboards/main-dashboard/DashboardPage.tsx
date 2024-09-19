@@ -15,22 +15,26 @@ export const DashboardPage: React.FC = () => {
   );
 
   const [loans, setLoans] = useState<LoanModel[]>([]);
+  const [loading, setLoading] = useState(true);
 
   //get user loans on mount
-  useEffect(()=>{
-      getMyloans(uuid).then((response)=>{
-        setLoans(response.data);
-        console.log(response.status);
-      }).catch((error)=>{
-          console.log(error);
-          if(error.status==404){
-            setLoans([]);
-          }
-      })
-      getUser(uuid).then((response)=>{
-        console.log(response);
-      });
-  },[])
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const response = await getMyloans(uuid).then((response) => {
+          console.log(response);
+          setLoans(response.data);
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [uuid]);
 
   return (
     <>
@@ -64,30 +68,36 @@ export const DashboardPage: React.FC = () => {
        {/* begin::Row */}
       <div className="d-flex  g-0 g-xl-4 g-xxl-6 justify-content-start gap-15">
         <div className="card card-custom shadow col-12 justify-content-center align-items-center">
-              <div className="card-body justify-content-center">
+              <div className="card-body col-12  justify-content-center">
               {loans.length >0 ?                    
-              <table className="table table-striped">
-                  <thead className="">
-                    <tr>
-                        <th scope="col">Loan Amount</th>
-                        <th scope="col">Application Date</th>                     
-                        <th scope="col">Status</th>
-                        <th scope="col">Date Disbursed </th>
-                        <th scope="col">First Repayment Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {loans.map((item)=>(
-                      <tr>
-                          <td className="me-2">{item.loanAmount}</td>
-                          <td className="me-2">{item.createdAt}</td>
-                          <td className="me-2">{item.approvalStatus}</td>
-                          <td className="me-2">{item.dateDisbursed}</td>
-                          <td className="me-2">{item.firstPaymentDate}</td>                   
-                      </tr> 
-                       ))}
-                  </tbody>
-              </table>
+                 loading ? 
+                  <div className="d-flex justify-content-center align-items-center mt-10">
+                  <div className="spinner-border p-5 text-info" role="status">
+                    <span className="sr-only">Loading...</span>
+                  </div>
+                </div>            
+                :
+                <>
+                  <div className="d-flex border mb-5 p-4 fw-bolder text-start bg-light-info">
+                  <div className="me-2 col-2">Loan Amount</div>
+                  <div className="me-2 col-3">Application Date</div>
+                  <div className="me-2 col-2">Status</div>
+                  <div className="me-2 col-3">Date Disbursed</div>
+                </div>
+                {loans.map((item, index) => (
+                   <div className="d-flex border mb-5 p-4 btn btn-light text-start">               
+                    <div className="me-2 col-2"><a className="text-dark">{item.loanAmount}</a></div>
+                    <div className="me-2 col-3">{new Date(item.createdAt).toLocaleString()} </div>
+                    <div className={`me-2 col-2 ${
+                      item.approvalStatus === 'approved' ? 'text-success' :
+                      item.approvalStatus === 'pending' ? 'text-warning' : 
+                      'text-danger'
+                    }`}>{item.approvalStatus}</div>
+                    <div className="me-2 col-3">{new Date(item.dateDisbursed).toLocaleString()}</div>                
+                 </div>  
+                ))}
+                </>
+                
               :
               <div className="justfiy-content-center align-items-center">
                 <div className="text-center">You haven't applied to any loans yet.</div>
