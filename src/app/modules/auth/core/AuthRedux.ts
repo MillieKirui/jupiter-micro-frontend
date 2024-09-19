@@ -35,7 +35,7 @@ export interface IAuthState {
 }
 
 export const reducer = persistReducer(
-  { storage, key: "jupiter", whitelist: ["user", "accessToken", "uuid"] },
+  { storage, key: "jupiter", whitelist: ["user", "accessToken", "uuid", "role"] },
   (state: IAuthState = initialAuthState, action: ActionWithPayload<IAuthState>) => {
     switch (action.type) {
       case actionTypes.Login: {
@@ -67,6 +67,11 @@ export const reducer = persistReducer(
         const user = action.payload?.user;
         return { ...state, user };
       }
+   
+      case actionTypes.SetRole: {
+        const role = action.payload?.role;
+        return { ...state, role };
+      }
 
       default:
         return state;
@@ -88,6 +93,7 @@ export const actions = {
   }),
   fulfillUser: (user: UserModel) => ({ type: actionTypes.UserLoaded, payload: { user } }),
   setUser: (user: UserModel) => ({ type: actionTypes.SetUser, payload: { user } }),
+  setRole: (role: string) => ({ type: actionTypes.SetRole, payload: { role } }),
 };
 
 export function* saga() {

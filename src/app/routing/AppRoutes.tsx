@@ -2,7 +2,7 @@ import { Redirect, Route, Switch, useParams } from "react-router-dom";
 import { MasterLayout } from "../layout/MasterLayout";
 import { LandingPage } from "../pages/Landing";
 import { AuthPage } from "../modules/auth";
-import { shallowEqual, useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../setup";
 import DashboardWrapper from "../pages/dashboards/main-dashboard/DashboardWrapper";
 import { LoansPage } from "../pages/Loans/LoansPage";
@@ -14,11 +14,8 @@ import { Applications } from "../pages/admin/applications/Applications";
 import { Application } from "../pages/admin/applications/Application";
 import { AdminDashboard } from "../pages/admin/dashboard/AdminDashboard";
 import { UsersPage } from "../pages/admin/users/UsersPage";
-import { getUser } from "../modules/auth/core/requests";
-import { useEffect, useState } from "react";
-import * as auth from "../../app/modules/auth/core/AuthRedux";
-import { UserModel } from "../modules/auth/models/UserModel";
 import { User } from "../pages/admin/users/User";
+import { useEffect, useState } from "react";
 
 export function AppRoutes() {
   const dispatch = useDispatch();
@@ -29,10 +26,7 @@ const isAuthorized = useSelector<RootState>(
 const uuid = useSelector<RootState>(
   ({ auth }) => auth.uuid
 );
-const role = useSelector<RootState>(
-  ({ auth }) => auth.role
-);
-
+const role = useSelector((state: RootState) => state.auth.role);
   return (
       <Switch>
         <Route exact path="/" component={LandingPage} />

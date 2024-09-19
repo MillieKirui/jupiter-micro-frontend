@@ -53,6 +53,7 @@ export function Login() {
                 setRole(user.role);
                 console.log(response.data.role);
                 dispatch(auth.actions.login(token, uuid,user.role));
+                dispatch(auth.actions.setRole(user.role));
               }
               if(user.role=="admin"){
                 history.push('/admin');
