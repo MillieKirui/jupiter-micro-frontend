@@ -55,9 +55,11 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <>
-      {/* begin::Row */}
-      <div className="d-flex g-0 g-xl-4 g-xxl-6 justify-content-start gap-20 mb-10">
-      <div className="card card-custom shadow col-4 justify-content-center align-items-center">
+    <div>
+            {/* begin::Row */}
+            <div className="row g-6 g-xl-9">
+      <div className="col-lg-6 col-xxl-4">
+      <div className="card card-custom shadow  justify-content-center align-items-center">
             <div className="card-body justify-content-center">
               <div className="d-flex text-center fs-2 mb-5">
                 <i className="fa fa-users fs-4x me-10" aria-hidden="true"></i>
@@ -68,21 +70,25 @@ export const AdminDashboard: React.FC = () => {
               </div>
          </div>
           </div>
-          <div className="card card-custom shadow col-4 justify-content-center align-items-center">
-            <div className="card-body justify-content-center">
-              <div className="d-flex text-center fs-2 mb-5">
-              <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
-                <KTSVG
-                  className="svg-icon-2 text-info"
-                  path="/media/icons/Package.svg"
-                  />
-                <div className="justify-content-start alight-items-start">
-                  <div className="text-start fw-bolder">{loans.length}</div>
-                  <div className="fs-6">Applications</div>
-                </div>
-              </div>
-         </div>
-          </div>
+      </div>
+      <div className="col-lg-6 col-xxl-4">
+      <div className="card card-custom shadow  justify-content-center align-items-center" >
+      <div className="card-body justify-content-center">
+          <div className="d-flex text-center fs-2 mb-5">
+          <i className="fa fa-pencil-square-o" aria-hidden="true"></i>
+            <KTSVG
+              className="svg-icon-2 text-info"
+              path="/media/icons/Package.svg"
+              />
+            <div className="justify-content-start alight-items-start">
+              <div className="text-start fw-bolder">{loans.length}</div>
+              <div className="fs-6">Applications</div>
+            </div>
+          
+      </div>
+      </div>
+      </div>
+      </div>
   
         <div>
    
@@ -90,6 +96,7 @@ export const AdminDashboard: React.FC = () => {
       </div>
       {/* end::Row */}
        {/* begin::Row */}
+       <div className="card">
        <div className="row g-6 g-xl-9">
           <div className="col-lg-6 col-xxl-4">
             {/*begin::Card*/}
@@ -141,7 +148,11 @@ export const AdminDashboard: React.FC = () => {
           </div>
          <Summary/>
 			</div>
+
+       </div>
       {/* end::Row */}
+
+    </div>
     </>
   );
 };
