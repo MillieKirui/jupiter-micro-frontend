@@ -57,7 +57,7 @@ export const AdminDashboard: React.FC = () => {
     <>
     <div>
             {/* begin::Row */}
-            <div className="row g-6 g-xl-9">
+      <div className="row g-6 g-xl-9">
       <div className="col-lg-6 col-xxl-4">
       <div className="card card-custom shadow  justify-content-center align-items-center">
             <div className="card-body justify-content-center">
