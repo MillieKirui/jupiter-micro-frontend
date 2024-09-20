@@ -42,7 +42,7 @@ export const DashboardPage: React.FC = () => {
     <PageTitle>User Dashboard</PageTitle>
       {/* begin::Row */}
       <div className="d-flex g-0 g-xl-4 g-xxl-6 justify-content-start gap-20 mb-10">
-      <div className="card card-custom shadow col-7 justify-content-center align-items-center">
+      <div className="card card-custom shadow col-12 col-md-7 justify-content-center align-items-center order-1">
             <div className="card-body justify-content-center">
               <div className="d-flex text-center fs-2 text-info fw-bolder mb-5">
                 500,000
@@ -52,7 +52,7 @@ export const DashboardPage: React.FC = () => {
               </div>
          </div>
           </div>
-      <div className="card card-custom shadow d-flex flex-end justify-content-end align-items-center btn btn-light-info">
+      <div className="card card-custom shadow col-12 col-md-7 d-flex flex-end justify-content-end align-items-center btn btn-light-info">
           <div className="card-body justify-content-center">
             <div className="d-flex text-center fs-3 fw-bolder ">
               Invite a Friend

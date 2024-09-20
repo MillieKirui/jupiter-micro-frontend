@@ -44,7 +44,7 @@ export function LandingPage() {
         {/* begin::Right */}
         <nav className="navbar navbar-expand-lg navbar-light">
             <div className="container-fluid">
-                <button className="navbar-toggler border-white p-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <button className="navbar-toggler border-white btn bg-white p-0 btn-active-bg-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span className="navbar-toggler-icon fs-2x"></span>
                 </button>
                 <div className="collapse navbar-collapse" id="navbarNav">

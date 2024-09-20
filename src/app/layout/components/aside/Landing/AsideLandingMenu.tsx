@@ -2,9 +2,13 @@ import { Link } from "react-router-dom";
 import clsx from "clsx";
 import { AsideMenu } from "./AsideMenu";
 import { useTheme } from "../../../core";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../setup";
 
 export function AsideLandingMenu() {
   const { config, classes } = useTheme();
+
+  const firstName = useSelector((state: RootState) => state.auth.user?.firstName);
 
   return (
     <>
@@ -36,7 +40,7 @@ export function AsideLandingMenu() {
                     <div className="aside-logo py-2 pb-15" id="kt_aside_logo">
                       <Link to="/">
                       <i className="fa fa-user fs-2x me-2" aria-hidden="true"></i>
-                      <span className="text-info fw-bolder fs-5" id="copy-text">Username</span>
+                      <span className="text-info fw-bolder fs-5" id="copy-text">{firstName}</span>
                       </Link>
                     </div>
                     {/* end::Logo */}
