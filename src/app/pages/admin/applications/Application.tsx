@@ -7,6 +7,7 @@ import { getLoanById,updateLoanStatus } from "../../../modules/application/core/
 import { LoanModel } from "../../../modules/application/models/LoanModel";
 import { PageTitle } from "../../../layout/core";
 import Swal from "sweetalert2";
+import { DisbursmentModal } from "./Modals/DisbursmentModal";
 
 export const Application: React.FC = () => {
   //get user UUID
@@ -16,6 +17,7 @@ export const Application: React.FC = () => {
 
   const {applicationId} = useParams<{applicationId:string}>();
  
+  const [showDisbursmentModal, setShowDisbursmentModal] = useState(false);
   const [loan, setLoan] = useState<LoanModel>();
 
   const getloan =()=>{
@@ -92,10 +94,16 @@ export const Application: React.FC = () => {
               <button 
                 className="btn btn-light-info" 
                 disabled={loan?.approvalStatus !== "approved"}
+                onClick={()=>setShowDisbursmentModal(true)}
               >
                 Disburse
               </button>
             )}
+                 <DisbursmentModal
+      show={showDisbursmentModal}
+      handleClose={() => setShowDisbursmentModal(false)}
+      uuid={applicationId}
+      />
             </div>
           </div>
           <div className="card-body border col-11 justify-content-center align-items-center ">

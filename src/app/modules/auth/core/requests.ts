@@ -53,5 +53,10 @@ export function updateProfileDetails(uuid:any,firstName:string,lastName:string,e
   return axios.patch<UserModel>(`${GET_USER_BY_ID}${uuid}`,{firstName,lastName,email} );
 }
 
+export function deleteAccount(uuid:any) {
+  return axios.delete<UserModel>(`${GET_USER_BY_ID}${uuid}` );
+}
+
+
 
 

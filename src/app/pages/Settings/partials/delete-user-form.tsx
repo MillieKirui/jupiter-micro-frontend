@@ -1,4 +1,20 @@
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../setup";
+import { deleteAccount } from "../../../modules/auth/core/requests";
+import { useHistory } from "react-router-dom";
+
 const DeleteUser = ()=>{
+    const uuid = useSelector<RootState>(
+        ({ auth }) => auth.uuid
+      );
+    const history = useHistory();
+    const deactivateAccount =()=>{
+        deleteAccount(uuid).then((response)=>{
+            console.log(response);   
+            history.push('/register');
+        })
+
+    }
     return(
         <form id="kt_account_deactivate_form" className="form" method="post" action="{{ route('profile.destroy') }}">
             {/*begin::Card body*/}
@@ -36,7 +52,7 @@ const DeleteUser = ()=>{
             {/*end::Card body*/}
             {/*begin::Card footer*/}
             <div className="card-footer d-flex justify-content-end py-6 px-9">
-                <button id="kt_account_deactivate_account_submit" type="submit" className="btn btn-danger fw-semibold">Deactivate Account</button>
+                <button id="kt_account_deactivate_account_submit" type="submit" className="btn btn-danger fw-semibold" onClick={deactivateAccount}>Deactivate Account</button>
             </div>
             {/*end::Card footer*/}
         </form>
