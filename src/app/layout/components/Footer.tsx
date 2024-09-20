@@ -20,7 +20,7 @@ export function Footer() {
         className={`${classes.footerContainer} d-flex flex-column flex-md-row align-items-center justify-content-between`}
       >
         {/* begin::Copyright */}
-        <div className="text-light order-2 order-md-1">
+        <div className="text-light order-1 order-md-1 col-12 col-md-6">
           <div>
             <div>Jupiter Microfinance</div>
             <span>Our business is to help other businesses
@@ -50,7 +50,7 @@ export function Footer() {
         </div>
         {/* end::Copyright */}
         {/* begin::Info */}
-          <div className="fv-row text-dark order-2 order-md-1">
+          <div className="text-dark order-2 order-md-2 col-12 col-md-6 text-start text-md-end">
           <div className="text-light  fs-4 fw-bold ">
             CONTACT US
           </div>

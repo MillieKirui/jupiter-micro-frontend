@@ -1,7 +1,7 @@
 export function ContactUsPage() {
     return (
         <>     
-        <div className="col-6 shadow p-5 rounded bg-white">
+        <div className="col-12 col-md-6 shadow p-5 rounded bg-white">
             {/*begin::Form */}
             <form action="" className="form" method="post" id="kt_contact_form">
                 <h1 className="fw-bold text-dark mb-2 text-center">Contact Us</h1>
