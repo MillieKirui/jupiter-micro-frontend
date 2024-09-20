@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { getMyloans } from "../../../modules/application/core/requests";
 import { getUser} from "../../../modules/auth/core/requests";
 import { LoanModel } from "../../../modules/application/models/LoanModel";
+import { PageTitle } from "../../../layout/core";
 
 export const DashboardPage: React.FC = () => {
   const [showApplyLoanModal, setShowApplyLoanModal] = useState(false);
@@ -38,6 +39,7 @@ export const DashboardPage: React.FC = () => {
 
   return (
     <>
+    <PageTitle>User Dashboard</PageTitle>
       {/* begin::Row */}
       <div className="d-flex g-0 g-xl-4 g-xxl-6 justify-content-start gap-20 mb-10">
       <div className="card card-custom shadow col-7 justify-content-center align-items-center">
@@ -96,8 +98,7 @@ export const DashboardPage: React.FC = () => {
                     <div className="me-2 col-3">{new Date(item.dateDisbursed).toLocaleString()}</div>                
                  </div>  
                 ))}
-                </>
-                
+                </>              
               :
               <div className="justfiy-content-center align-items-center">
                 <div className="text-center">You haven't applied to any loans yet.</div>

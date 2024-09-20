@@ -8,17 +8,18 @@ import { Footer } from "../../layout/components/Footer";
 export function LandingPage() {
   const { config, classes, attributes } = useTheme();
   const gradientStyle = {
-    backgroundImage: 'linear-gradient(100.33deg, rgba(136, 100, 140, 0.6) -36.88%, rgba(136, 100, 140, 0.463495) 21.99%, rgba(136, 100, 140, 0.414385) 30.82%, rgba(147, 117, 152, 0.359844) 40.28%, rgba(223, 227, 231, 0) 102.68%)'
+    background: 'linear-gradient(100.33deg, rgba(136, 100, 140, 0.6) -36.88%, rgba(136, 100, 140, 0.463495) 21.99%, rgba(136, 100, 140, 0.414385) 30.82%, rgba(147, 117, 152, 0.359844) 40.28%, rgba(223, 227, 231, 0) 102.68%)'
   };
   return (
-    <>
+    <div style={gradientStyle}>
        <div
       id="kt_header"
-      className="header pt-10 border"
+      className="header border"
       data-kt-sticky="true"
       data-kt-sticky-name="header"
       data-kt-sticky-offset="{default: '200px', lg: false}"
     >
+      
       <div
         className={`${classes.headerContainer.join(
           " "
@@ -94,10 +95,10 @@ export function LandingPage() {
           </div>
         </div>
       </div>
-    <div className="ps-15">
+    <div className="ps-15" >
       <ContactUsPage/>
     </div>
     <Footer/>   
-    </>
+    </div>
   );
 }

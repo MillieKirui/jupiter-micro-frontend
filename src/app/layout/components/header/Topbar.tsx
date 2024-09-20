@@ -1,13 +1,32 @@
+import React, { useState } from "react";
 import { KTSVG } from "../../../helpers";
 import {
-  HeaderUserMenu,
+  HeaderUserMenu
 } from "../../../partials";
 import { useTheme } from "../../core";
 
 export function Topbar() {
   const { config } = useTheme();
+  const [showSearchModal, setShowSearchModal] = useState(false);
+  const [showInboxComposeModal, setShowInboxComposeModal] = useState(false);
+
   return (
     <>
+
+      {/* begin::User */}
+      <div className="ms-1 ms-lg-6">
+        {/* begin::Toggle */}
+        <div
+          className="btn btn-icon btn-sm btn-active-bg-accent"
+          data-kt-menu-trigger="click"
+          data-kt-menu-placement="bottom-end"
+        >
+          <i className="fa fa-user fs-2x" aria-hidden="true"></i>
+        </div>
+        <HeaderUserMenu />
+        {/* end::Toggle */}
+      </div>
+      {/* end::User */}
 
       {/* begin::Notifications */}
       <div className="ms-1 ms-lg-6">
@@ -17,26 +36,22 @@ export function Topbar() {
           data-kt-menu-trigger="click"
           data-kt-menu-placement="bottom-end"
         >
-         <i className="far fa-bell fs-2x"></i>
+          <i className="fa fa-bell fs-2x" aria-hidden="true"></i>
         </button>
         {/* end::Dropdown */}
       </div>
       {/* end::Notifications */}
- 
-      {/* begin::User */}
-      <div className="ms-1 ms-lg-6">
-        {/* begin::Toggle */}
-        <div
-          className="btn btn-icon btn-sm btn-active-bg-accent"
-          data-kt-menu-trigger="click"
-          data-kt-menu-placement="bottom-end"
+
+      {/* begin::Aside Toggler */}
+      {config.aside.display && (
+        <button
+          className="btn btn-icon btn-sm btn-active-bg-accent d-lg-none ms-1 ms-lg-6"
+          id="kt_aside_toggler"
         >
-          <i className="far fa-user fs-2x"></i>
-        </div>
-        <HeaderUserMenu />
-        {/* end::Toggle */}
-      </div>
-      {/* end::User */}
+          <i className="fa fa-bars fs-2x" aria-hidden="true"></i>
+        </button>
+      )}
+      {/* end::Aside Toggler */}
 
       {/* begin::Sidebar Toggler */}
       {config.sidebar.display && (
@@ -44,7 +59,10 @@ export function Topbar() {
           className="btn btn-icon btn-sm btn-active-bg-accent d-lg-none ms-1 ms-lg-6"
           id="kt_sidebar_toggler"
         >
-         <i className="fa-solid fa-bars"></i>
+          <KTSVG
+            path="/media/icons/duotone/Text/Menu.svg"
+            className="svg-icon-1 svg-icon-dark"
+          />
         </button>
       )}
       {/* end::Sidebar Toggler */}
