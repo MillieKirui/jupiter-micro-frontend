@@ -1,18 +1,39 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../setup';
+import { updateProfileDetails } from '../../../modules/auth/core/requests';
 
 type Props = {
-    user_name?: string;
+    user_firstName?: string;
+    user_lastName?:string;
     user_email?: string;
   };
 
-const UpdateProfileInfo: React.FC<Props> = ({user_name,user_email}) => {
-  const [name, setName] = useState<string>('');
+const UpdateProfileInfo: React.FC<Props> = ({user_firstName,user_lastName,user_email}) => {
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [statusMessage, setStatusMessage] = useState<string>('');
 
+  const uuid = useSelector<RootState>(
+    ({ auth }) => auth.uuid
+  );
+
+  useEffect(()=>{
+    if(user_firstName && user_lastName && user_email){
+      setFirstName(user_firstName);
+      setLastName(user_lastName);
+      setEmail(user_email);
+    }
+  },[user_firstName,user_lastName,user_email])
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    
+    updateProfileDetails(uuid,firstName,lastName,email).then((response)=>{
+      console.log(firstName);
+      
+      console.log(response);
+    })   
     setStatusMessage('Saved.'); 
   };
 
@@ -21,15 +42,28 @@ const UpdateProfileInfo: React.FC<Props> = ({user_name,user_email}) => {
       <form id="kt_account_profile_details_form" className="form" method="post" onSubmit={handleSubmit}>
         <div className="card-body border-top p-9">
           <div className="row mb-6">
-            <label className="col-lg-4 col-form-label required fw-semibold fs-6">Name</label>
+            <label className="col-lg-4 col-form-label required fw-semibold fs-6">First Name</label>
             <div className="col-lg-8 fv-row">
               <input
                 type="text"
                 name="name"
                 className="form-control form-control-lg form-control-solid"
-                placeholder="Name"
-                value={user_name}
-                onChange={(e) => setName(e.target.value)}
+                placeholder="First Name"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="row mb-6">
+            <label className="col-lg-4 col-form-label required fw-semibold fs-6">Last Name</label>
+            <div className="col-lg-8 fv-row">
+              <input
+                type="text"
+                name="name"
+                className="form-control form-control-lg form-control-solid"
+                placeholder="Last Name"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
               />
             </div>
           </div>
@@ -42,7 +76,7 @@ const UpdateProfileInfo: React.FC<Props> = ({user_name,user_email}) => {
                 name="email"
                 className="form-control form-control-lg form-control-solid"
                 placeholder="Email"
-                value={user_email}
+                value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
               {false && (

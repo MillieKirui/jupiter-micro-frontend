@@ -20,7 +20,11 @@ export const SettingsPage: React.FC = () => {
         console.log(response);
         setUser(response.data);
       });
-  },[])
+  },[uuid]);
+
+  const updateProfileInfo = () =>{
+
+  }
 
   return (
     <>
@@ -44,7 +48,7 @@ export const SettingsPage: React.FC = () => {
 										{/* begin::Card header*/}
 										{/* begin::Content*/}
 										<div id="kt_account_settings_profile_details" className="collapse show">
-                      <UpdateProfileInfo user_name={`${user?.firstName}${user?.lastName}`} user_email={user?.email}/>
+                      <UpdateProfileInfo user_firstName={`${user?.firstName}`} user_lastName={`${user?.lastName}`} user_email={user?.email}/>
 										</div>
 										{/* end::Content*/}
 									</div>

@@ -48,3 +48,10 @@ export function getUserById() {
 export function getUser(uuid:any) {
   return axios.get<UserModel>(`${GET_USER_BY_ID}${uuid}`);
 }
+
+export function updateProfileDetails(uuid:any,firstName:string,lastName:string,email:string) {
+  return axios.patch<UserModel>(`${GET_USER_BY_ID}${uuid}`,{firstName,lastName,email} );
+}
+
+
+
