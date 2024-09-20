@@ -2,6 +2,8 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../../../setup";
 import { Modal } from "react-bootstrap-v5";
 import { useState } from "react";
+import { getLoanById, updateDisbursment } from "../../../../modules/application/core/requests";
+import Swal from "sweetalert2";
 
 type Props = {
     show: boolean;
@@ -11,19 +13,34 @@ type Props = {
 
 const DisbursmentModal: React.FC<Props> = ({ show, handleClose, uuid }) => {
     
-    const [payType,setPayType] = useState('');
+    const [payType,setPayType] = useState('Mpesa');
     const [transactionNumber,setTransactionNumber]= useState('');
-    const [dateDisbursed, setDateDisbursed]= useState('');
+    const [dateDisbursed, setDateDisbursed]= useState<Date>();
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if(uuid && payType && transactionNumber && dateDisbursed){
+        updateDisbursment(uuid,payType,transactionNumber,dateDisbursed).then((response)=>{
+            handleClose();
+            Swal.fire({
+                title: 'Success!',
+                text: 'Loan Disbursed.',
+                icon: 'success',
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33', 
+                confirmButtonText: 'OK!'
+             }).finally(()=>
+            {
+                window.location.reload();
+            })
+        })
+        }
       };
   
     return (
       <Modal
         id="kt_modal_apply_loan"
         tabIndex={-1}
-        aria-hidden="true"
         dialogClassName="modal-dialog-centered mw-800px h-auto"
         show={show}
         onHide={handleClose}
@@ -46,14 +63,12 @@ const DisbursmentModal: React.FC<Props> = ({ show, handleClose, uuid }) => {
                 <div className="card-body border-top p-9">
                 <div className="row mb-6">
                     <label className="col-lg-4 col-form-label required fw-semibold fs-6">Pay Type</label>
-                    <div className="col-lg-8 fv-row">
-                    <input
-                        type="text"
-                        name="payType"
-                        className="form-control form-control-lg form-control-solid"
-                        placeholder="Pay Type"
-                        onChange={(e) => setPayType(e.target.value)}
-                    />
+                    <div className="col-lg-8 fv-row d-flex form-input-group">                
+                        <select name="payType" className="form-control form-control-lg" onChange={(e) => setPayType(e.target.value)}>
+                            <option value="Bank">Bank</option>
+                            <option value="Mpesa">Mpesa</option>
+                            <option value="Cash">Cash</option>
+                        </select>
                     </div>
                 </div>
                 <div className="row mb-6">
@@ -76,7 +91,7 @@ const DisbursmentModal: React.FC<Props> = ({ show, handleClose, uuid }) => {
                         name="datedisbursed"
                         className="form-control form-control-lg form-control-solid"
                         placeholder="Disbursment Date"
-                        onChange={(e) => setDateDisbursed(e.target.value)}
+                        onChange={(e) => setDateDisbursed(new Date(e.target.value))}
                     />
                     {false && (
                         <div>

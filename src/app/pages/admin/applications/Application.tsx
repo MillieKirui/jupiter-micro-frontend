@@ -84,7 +84,7 @@ export const Application: React.FC = () => {
             {(loan?.approvalStatus == 'rejected') ? (
                 <button className="btn btn-danger" disabled>Rejected</button>
             ) : (
-                <button className="btn btn-light-danger"  onClick={()=>{ updateLoanState ("rejected")}}>Reject</button>
+                <button className="btn btn-light-danger" disabled={loan?.disbursed ? true: false}  onClick={()=>{ updateLoanState ("rejected")}}>Reject</button>
             )}
             {loan?.disbursed ? (
                 <button className="btn btn-success" disabled>
