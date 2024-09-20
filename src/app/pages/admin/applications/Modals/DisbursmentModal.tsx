@@ -17,7 +17,6 @@ const DisbursmentModal: React.FC<Props> = ({ show, handleClose, uuid }) => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-
       };
   
     return (
@@ -50,7 +49,7 @@ const DisbursmentModal: React.FC<Props> = ({ show, handleClose, uuid }) => {
                     <div className="col-lg-8 fv-row">
                     <input
                         type="text"
-                        name="name"
+                        name="payType"
                         className="form-control form-control-lg form-control-solid"
                         placeholder="Pay Type"
                         onChange={(e) => setPayType(e.target.value)}
@@ -62,7 +61,7 @@ const DisbursmentModal: React.FC<Props> = ({ show, handleClose, uuid }) => {
                     <div className="col-lg-8 fv-row">
                     <input
                         type="text"
-                        name="name"
+                        name="transactionNumber"
                         className="form-control form-control-lg form-control-solid"
                         placeholder="Transaction Number"
                         onChange={(e) => setTransactionNumber(e.target.value)}
@@ -73,8 +72,8 @@ const DisbursmentModal: React.FC<Props> = ({ show, handleClose, uuid }) => {
                     <label className="col-lg-4 col-form-label required fw-semibold fs-6">Disbursment Date</label>
                     <div className="col-lg-8 fv-row">
                     <input
-                        type="text"
-                        name="email"
+                        type="date"
+                        name="datedisbursed"
                         className="form-control form-control-lg form-control-solid"
                         placeholder="Disbursment Date"
                         onChange={(e) => setDateDisbursed(e.target.value)}

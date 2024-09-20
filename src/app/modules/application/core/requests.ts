@@ -91,6 +91,12 @@ export function updateLoanStatus(uuid:any, approvalStatus:string) {
   return axios.patch<LoanModel>(`${LOANS_URL}/${uuid}`,{approvalStatus});
 }
 
+//get all loans
 export function getLoans() {
   return axios.get<LoanModel[]>(`${LOANS_URL}`);
+}
+
+//Update disbursment
+export function updateDisbursment(uuid:any,payType:string, transactionNumber:string, dateDisbursed:Date){
+  return axios.patch<LoanModel>(`${LOANS_URL}/updateDisbursment/${uuid}`,{payType,transactionNumber,dateDisbursed});
 }
