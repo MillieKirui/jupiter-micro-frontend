@@ -1,24 +1,20 @@
 import { Link } from "react-router-dom";
 import clsx from "clsx";
-import { AsideMenu } from "./AsideMenu";
-import { useTheme } from "../../../core";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../../setup";
+import { useTheme } from "../../core";
+import { AsideLandingMenu } from "./AsideLandingMenu";
 
-export function AsideLandingMenu() {
+export function AsideLandingDefault() {
   const { config, classes } = useTheme();
-
-  const firstName = useSelector((state: RootState) => state.auth.user?.firstName);
 
   return (
     <>
       {config.aside.display && (
         <div
           id="kt_aside"
-          className={clsx("aside", "bg-white", classes.aside.join(" "))}
+          className={`d-lg-none ${clsx("aside", "bg-white", classes.aside.join(" "))}`}
           data-kt-drawer="true"
           data-kt-drawer-name="aside"
-          data-kt-drawer-activate="{default: true, lg: false}"
+          data-kt-drawer-activate="{default: true}"
           data-kt-drawer-overlay="true"
           data-kt-drawer-width={
             config.aside.secondaryDisplay
@@ -36,15 +32,14 @@ export function AsideLandingMenu() {
                 id="kt_aside_wordspace"
               >
                   <>
-                    {/* begin::Logo */}
                     <div className="aside-logo py-2 pb-15" id="kt_aside_logo">
-                      <Link to="/">
-                      <i className="fa fa-user fs-2x me-2" aria-hidden="true"></i>
-                      <span className="text-info fw-bolder fs-5" id="copy-text">{firstName}</span>
-                      </Link>
+                    <Link to="/" className="text-info fw-bolder fs-5 ms-0 ms-md-10 justify-content-start align-items-start">
+                        <div>Jupiter </div>
+                        <div>Microfinance </div>                  
+                    </Link>
                     </div>
-                    {/* end::Logo */}
-                    <AsideMenu
+
+                    <AsideLandingMenu
                       menuType="main"
                       asidePrimaryDisplay={config.aside.primaryDisplay}
                     />

@@ -1,11 +1,10 @@
-import { Link } from "react-router-dom";
-import { KTSVG, toAbsoluteUrl } from "../../../helpers";
 import { usePageData, useTheme } from "../../core";
 import { Topbar } from "./Topbar";
 
 export function Header() {;
   const { config, classes, attributes } = useTheme();
   const { pageTitle, moduleName } = usePageData();
+ 
   return (
     <>
       <div

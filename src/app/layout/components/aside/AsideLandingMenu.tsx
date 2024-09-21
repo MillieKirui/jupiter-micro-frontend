@@ -1,17 +1,15 @@
 import React, { useRef, useEffect } from "react";
-import { AsideMenuMain } from "./AsideMenuMain";
+import { RootState } from "../../../../setup";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../../setup";
-import { AsideMenuAdmin } from "../AsideMenuAdmin";
+import { LandingPageMenu } from "./LandingPageMenu";
 
 type Props = {
   menuType: "main";
   asidePrimaryDisplay: boolean;
 };
 
-const AsideMenu: React.FC<Props> = ({ menuType, asidePrimaryDisplay }) => {
+const AsideLandingMenu: React.FC<Props> = ({ menuType, asidePrimaryDisplay }) => {
   const scrollRef = useRef<HTMLDivElement | null>(null);
-  const role = useSelector((state: RootState) => state.auth.role);
   const user= useSelector<RootState>(
     (state) => state.auth.user
   );
@@ -31,10 +29,8 @@ const AsideMenu: React.FC<Props> = ({ menuType, asidePrimaryDisplay }) => {
         data-kt-scroll-offset="10px"
       >
         <div className="menu-wrapper menu-column menu-fit">
-          {role ==="admin" ?
-              menuType === "main" && <AsideMenuAdmin />
-              :
-              menuType === "main" && <AsideMenuMain />
+          {
+              menuType === "main" && <LandingPageMenu />
           }
         </div>
       </div>
@@ -42,4 +38,4 @@ const AsideMenu: React.FC<Props> = ({ menuType, asidePrimaryDisplay }) => {
   );
 };
 
-export { AsideMenu };
+export { AsideLandingMenu };

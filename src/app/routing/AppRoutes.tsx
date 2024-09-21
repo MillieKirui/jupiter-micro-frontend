@@ -1,6 +1,5 @@
 import { Redirect, Route, Switch, useParams } from "react-router-dom";
 import { MasterLayout } from "../layout/MasterLayout";
-import { LandingPage } from "../pages/Landing";
 import { AuthPage } from "../modules/auth";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../setup";
@@ -15,7 +14,8 @@ import { Application } from "../pages/admin/applications/Application";
 import { AdminDashboard } from "../pages/admin/dashboard/AdminDashboard";
 import { UsersPage } from "../pages/admin/users/UsersPage";
 import { User } from "../pages/admin/users/User";
-import { useEffect, useState } from "react";
+import { LandingPageWrapper } from "../pages/Landing/LandingPageWrapper";
+import { LandingLayout } from "../layout/LandingLayout";
 
 export function AppRoutes() {
   const dispatch = useDispatch();
@@ -29,7 +29,9 @@ const uuid = useSelector<RootState>(
 const role = useSelector((state: RootState) => state.auth.role);
   return (
       <Switch>
-        <Route exact path="/" component={LandingPage} />
+        <LandingLayout>
+          <Route exact path="/" component={LandingPageWrapper} />
+        </LandingLayout> 
         <Route  path="/auth" component={AuthPage} />
         <Redirect exact from="/auth" to="/dashboard" />  
         {isAuthorized  &&

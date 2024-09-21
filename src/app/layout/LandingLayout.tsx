@@ -1,25 +1,27 @@
 import React from "react";
-import { AsideDefault } from "./components/aside/AsideDefault";
 import { Footer } from "./components/Footer";
-import { HeaderWrapper } from "./components/header/HeaderWrapper";
+import { LandingHeaderWrapper } from "./components/header/LandingHeaderWrapper";
 import { Toolbar } from "./components/Toolbar";
 import { ScrollTop } from "./components/ScrollTop";
 import { Content } from "./components/Content";
 import { MasterInit } from "./MasterInit";
 import { PageDataProvider } from "./core";
 import SideMenuDrawer from "../pages/Landing/partials/SideMenuDrawer";
+import { AsideLandingDefault } from "./components/aside/AsideLandingDefault";
 
-const MasterLayout: React.FC = ({ children }) => {
+const LandingLayout: React.FC = ({ children }) => {
   return (
     <PageDataProvider>
       <div className="d-flex flex-column flex-root">
         <div className="page d-flex flex-row flex-column-fluid">
-          <AsideDefault />
+            <div className="d-lg-none">
+                <AsideLandingDefault/>
+            </div>
           <div
-            className="wrapper d-flex flex-column flex-row-fluid me-0wrapper d-flex flex-column flex-row-fluid me-0 bg-light-info"
+            className="wrapper d-flex flex-column flex-row-fluid me-0wrapper d-flex flex-column flex-row-fluid me-0 p-0"
             id="kt_wrapper"
           >
-            <HeaderWrapper />
+            <LandingHeaderWrapper />
             <div className="d-flex flex-column flex-column-fluid">
               <Toolbar />
               <div
@@ -39,4 +41,4 @@ const MasterLayout: React.FC = ({ children }) => {
   );
 };
 
-export { MasterLayout };
+export { LandingLayout };

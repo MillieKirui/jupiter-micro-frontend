@@ -7,9 +7,7 @@ import { useTheme } from "../../core";
 
 export function Topbar() {
   const { config } = useTheme();
-  const [showSearchModal, setShowSearchModal] = useState(false);
-  const [showInboxComposeModal, setShowInboxComposeModal] = useState(false);
-
+  
   return (
     <>
 
