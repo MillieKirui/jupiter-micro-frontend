@@ -2,6 +2,7 @@
 import React, { useEffect } from "react";
 import { getConfig, IThemeConfig, PageTitle, useTheme } from "../../layout/core";
 import { LandingPage } from "./LandingPage";
+import { LandingLayout } from "../../layout/LandingLayout";
 
 const defaultPageConfig = getConfig();
 const dashboardPageConfig: Partial<IThemeConfig> = {
@@ -35,7 +36,9 @@ export function LandingPageWrapper() {
 
   return (
     <>
-      <LandingPage />
+    <LandingLayout>
+    <LandingPage />
+    </LandingLayout>
     </>
   );
 }
