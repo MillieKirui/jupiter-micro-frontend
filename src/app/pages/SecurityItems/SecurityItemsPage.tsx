@@ -5,9 +5,10 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../setup";
 import { getMyloans } from "../../modules/application/core/requests";
 import { LoanModel } from "../../modules/application/models/LoanModel";
+import { SecurityAdditionModal } from "./SecurityAdditionModal";
 
 export const SecurityItemsPage: React.FC = () => {
-  const [showApplyLoanModal, setShowApplyLoanModal] = useState(false);
+  const [showSecurityAdditionModal, setShowSecurityAdditionModal] = useState(false);
     //get user UUID
     const uuid = useSelector<RootState>(
       (state) => state.auth?.uuid,
@@ -18,7 +19,7 @@ export const SecurityItemsPage: React.FC = () => {
     useEffect(()=>{
       getMyloans(uuid).then((response)=>{
         setLoans(response.data);
-        console.log(response.status);
+        console.log(response.data);
       }).catch((error)=>{
           console.log(error);
           if(error.status==404){
@@ -31,8 +32,10 @@ export const SecurityItemsPage: React.FC = () => {
        {/* begin::Row */}
       <div className="d-flex  g-0 g-xl-4 g-xxl-6 justify-content-start gap-15">
         <div className="card card-custom shadow col-12 justify-content-start p-5">
-            <div className="card-header justify-content-end">
-              <button className="btn btn-info p-2">Add Security Item</button>
+            <div className="card-toolbar justify-content-end">
+              <button className="btn btn-sm btn-info " onClick={() => setShowSecurityAdditionModal(true)}>
+                <span className="fs-2">+</span>
+                <span>Add Security Item</span></button>
             </div>
               <div className="card-body row ">
               {loans.map((item)=>(
@@ -56,10 +59,9 @@ export const SecurityItemsPage: React.FC = () => {
       </div>
       {/* end::Row */}     
         {/* begin::Modals */}
-        <ApplyLoanModal
-        show={showApplyLoanModal}
-        handleClose={() => setShowApplyLoanModal(false)}
-      />
+        <SecurityAdditionModal
+        show={showSecurityAdditionModal}
+        handleClose={() => setShowSecurityAdditionModal(false)} uuid={""}/>
       {/* end::Modals */}
     </>
   );
