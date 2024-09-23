@@ -41,8 +41,8 @@ export function requestPassword(email: string) {
 }
 
 
-export function getUserById() {
-  return axios.get<UserModel>(`${GET_USER_BY_ID}`);
+export function getUserById(uuid:any) {
+  return axios.get<UserModel>(`${GET_USER_BY_ID}${uuid}`);
 }
 
 export function getUser(uuid:any) {

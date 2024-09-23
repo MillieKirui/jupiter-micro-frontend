@@ -88,8 +88,9 @@ export const actions = {
     payload: { accessToken },
   }),
   logout: () => ({ type: actionTypes.Logout }),
-  requestUser: () => ({
-    type: actionTypes.UserRequested
+  requestUser: (uuid: string) => ({
+    type: actionTypes.UserRequested,
+    payload: { uuid },
   }),
   fulfillUser: (user: UserModel) => ({ type: actionTypes.UserLoaded, payload: { user } }),
   setUser: (user: UserModel) => ({ type: actionTypes.SetUser, payload: { user } }),
@@ -97,16 +98,25 @@ export const actions = {
 };
 
 export function* saga() {
-  yield takeLatest(actionTypes.Login, function* loginSaga(action) {
-    yield put(actions.requestUser());
+  yield takeLatest(actionTypes.Login, function* loginSaga(action: ActionWithPayload<{ uuid: string }>) {
+    const uuid = action.payload?.uuid;
+    if(uuid){
+      yield put(actions.requestUser(uuid));
+    }
   });
 
-  yield takeLatest(actionTypes.Register, function* registerSaga() {
-    yield put(actions.requestUser());
+  yield takeLatest(actionTypes.Register, function* registerSaga(action: ActionWithPayload<{ uuid: string }>) {
+    const uuid = action.payload?.uuid;
+    if(uuid){
+      yield put(actions.requestUser(uuid));
+    }
   });
 
-  yield takeLatest(actionTypes.UserRequested, function* userRequested() {
-    const { data: user } = yield getUserById();
-    yield put(actions.fulfillUser(user));
+  yield takeLatest(actionTypes.UserRequested, function* userRequested(action: ActionWithPayload<{ uuid: string }>) {
+    const uuid = action.payload?.uuid;
+    if (uuid) {
+      const { data: user } = yield getUserById(uuid); 
+      yield put(actions.fulfillUser(user));
+    }
   });
 }

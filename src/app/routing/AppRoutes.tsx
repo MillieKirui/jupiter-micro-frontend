@@ -1,4 +1,4 @@
-import { Redirect, Route, Switch, useLocation, useParams } from "react-router-dom";
+import { Redirect, Route, Switch, useParams } from "react-router-dom";
 import { MasterLayout } from "../layout/MasterLayout";
 import { AuthPage } from "../modules/auth";
 import { useDispatch, useSelector } from "react-redux";
@@ -29,10 +29,10 @@ const uuid = useSelector<RootState>(
 const role = useSelector((state: RootState) => state.auth.role);
   return (
       <Switch>
-        <Route exact path="/" component={LandingPageWrapper} />
+          <Route exact path="/" component={LandingPageWrapper} />
         <Route  path="/auth" component={AuthPage} />
         <Redirect exact from="/auth" to="/dashboard" />  
-        {isAuthorized  ?
+        {isAuthorized  &&
         <>
         {role === "admin" ?
           <MasterLayout> 
@@ -57,8 +57,6 @@ const role = useSelector((state: RootState) => state.auth.role);
         </MasterLayout>
         }
         </>
-        :
-        <Redirect to="/auth" /> 
         }
       </Switch>
   );
