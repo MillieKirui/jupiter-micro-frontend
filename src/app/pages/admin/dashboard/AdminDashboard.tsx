@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect, useState } from "react";
 import { RootState } from "../../../../setup";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { UserModel } from "../../../modules/auth/models/UserModel";
 import { KTSVG, toAbsoluteUrl } from "../../../helpers";
 import { getUsers } from "../../../modules/users/core/requests";
@@ -9,8 +9,10 @@ import { LoanModel } from "../../../modules/application/models/LoanModel";
 import { getLoans } from "../../../modules/application/core/requests";
 import StatusListChart from "./partials/chart";
 import Summary from "./partials/summary";
+import { setPendingLoans } from "../../../store/LoanSlice";
 
 export const AdminDashboard: React.FC = () => {
+  const dispatch = useDispatch();
   //get user UUID
   const uuid = useSelector<RootState>(
     (state) => state.auth?.uuid,
@@ -52,7 +54,7 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const { approvedCount, rejectedCount, pendingCount } = countByStatus();
-
+  dispatch(setPendingLoans(pendingCount));
 
   //get total loan based on disbursment or status
   const sumAmounts = () => {
@@ -107,8 +109,7 @@ export const AdminDashboard: React.FC = () => {
       </div>
       </div>
       </div>
-      </div>
-  
+      </div> 
         <div>
    
         </div>

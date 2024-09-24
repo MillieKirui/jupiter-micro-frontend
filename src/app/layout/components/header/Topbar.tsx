@@ -4,9 +4,13 @@ import {
   HeaderUserMenu
 } from "../../../partials";
 import { useTheme } from "../../core";
+import { Notifications } from "../../../partials/Notifications";
+import { useSelector } from "react-redux";
 
 export function Topbar() {
   const { config } = useTheme();
+
+  const pendingLoans = useSelector((state: any) => state.loan.pendingLoans);
   
   return (
     <>
@@ -36,7 +40,9 @@ export function Topbar() {
         >
           <i className="fa fa-bell fs-2x" aria-hidden="true"></i>
         </button>
+        <span className="p-0 m-0 text-danger">{pendingLoans}</span>
         {/* end::Dropdown */}
+        <Notifications/>
       </div>
       {/* end::Notifications */}
 
