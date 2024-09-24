@@ -143,7 +143,7 @@ export const LoansPage: React.FC = () => {
               <div className="d-flex border mb-5 p-4 fw-bolder text-start bg-light-info">
               <div className="me-2 col-2">Loan Amount</div>
               <div className="me-2 col-3">Application Date</div>
-              <div className="me-2 col-2">Status</div>
+              <div className="me-2 col-3">Status</div>
               <div className="me-2 col-3">Date Disbursed</div>
             </div>
             {searchedData.map((item, index) => (
@@ -151,7 +151,7 @@ export const LoansPage: React.FC = () => {
                <div className="d-flex border mb-5 p-4 btn btn-light text-start">               
                 <div className="me-2 col-2"><a className="text-dark">{item.loanAmount}</a></div>
                 <div className="me-2 col-3">{new Date(item.createdAt).toLocaleString()} </div>
-                <div className={`me-2 col-2 ${
+                <div className={`me-2 col-3 ${
                   item.approvalStatus === 'approved' ? 'text-success' :
                   item.approvalStatus === 'pending' ? 'text-warning' : 
                   'text-danger'
