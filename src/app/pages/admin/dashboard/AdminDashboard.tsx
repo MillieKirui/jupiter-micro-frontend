@@ -18,8 +18,6 @@ export const AdminDashboard: React.FC = () => {
 
   const [users, setUsers] = useState<UserModel[]>([]);
   const [loans, setLoans] = useState<LoanModel[]>([]);
-  const [totalDisbursed, setTotalDisbursed]=useState(0);
-  const [totalPending, setTotalPending]=useState(0);
 
   useEffect(()=>{
       getLoans().then((response)=>{
@@ -55,30 +53,24 @@ export const AdminDashboard: React.FC = () => {
 
   const { approvedCount, rejectedCount, pendingCount } = countByStatus();
 
-  const gettotalDisbursed = () => {
-    const disbursedLoans = loans.filter(loan => loan.disbursed==true);
-    var sum=0
-    disbursedLoans.forEach(loan => {
-      sum+=parseInt(loan.loanAmount);
+
+  //get total loan based on disbursment or status
+  const sumAmounts = () => {
+    let totalDisbursed = 0;
+    let totalPending = 0;
+
+    loans.forEach((loan) => {
+      if (loan.disbursed === true) {
+          totalDisbursed+=parseInt(loan.loanAmount);
+      } else if (loan.approvalStatus === 'pending') {
+        totalPending+=parseInt(loan.loanAmount);
+      }     
     });
-    setTotalDisbursed(sum);
-    return disbursedLoans;
-};
 
-const getTotalPending = () => {
-  const approvedLoans = loans.filter(loan => loan.approvalStatus=='pending');
-  var sum=0
-  approvedLoans.forEach(loan => {
-    sum+=parseInt(loan.loanAmount);
-  });
-  setTotalPending(sum);
-  return approvedLoans;
-};
+    return { totalDisbursed, totalPending};
+  };
 
-useEffect(()=>{
-  getTotalPending();
-  gettotalDisbursed();
-},[]);
+  const { totalDisbursed, totalPending} = sumAmounts();
 
   return (
     <>
@@ -159,7 +151,7 @@ useEffect(()=>{
                     {/*end::Label*/}
                     {/*begin::Label*/}
                     <div className="d-flex fs-6 fw-semibold align-items-center">
-                      <div className="bullet bg-gray-300 me-3 bg-warning"></div>
+                      <div className="bullet bg-warning me-3"></div>
                       <div className="text-gray-400">Pending</div>
                       <div className="ms-auto fw-bold text-gray-700">{pendingCount}</div>
                     </div>
