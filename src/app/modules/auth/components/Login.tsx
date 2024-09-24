@@ -108,6 +108,7 @@ export function Login() {
         <label className="form-label fs-6 fw-bolder text-dark pt-5">
           Password
         </label>
+        <br/>
         <input
           type="password"
           placeholder="Password"
@@ -128,6 +129,13 @@ export function Login() {
             <div className="fv-help-block">{formik.errors.password}</div>
           </div>
         )}
+          <Link
+          to="/auth/forgot-password"
+          className="text-danger fs-6 fw-bolder text-hover-primary pt-5"
+          id="kt_login_signin_form_password_reset_button"
+        >
+          Forgot Password ?
+        </Link>
       </div>
       {/* end::Form group */}
       

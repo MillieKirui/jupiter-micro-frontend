@@ -36,7 +36,7 @@ const initialValues = {
   paymentFrequency:"",
   collateralType:"",
   collateralValue:0,
-  collateralFilePath:"",
+  collateralFile:null,
   uuid:""
 };
 
@@ -97,7 +97,7 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
           values.paymentFrequency,
           values.collateralType,
           values.collateralValue,
-          values.collateralFilePath,
+          values.collateralFile,
           uuid
 
         ).then((response) => {
@@ -777,7 +777,7 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
                       <input
                         type="file"
                         autoComplete="off"
-                        {...formik.getFieldProps("collateralFilePath")}
+                        {...formik.getFieldProps("collateralFile")}
                         className={clsx(
                           "form-control form-control-lg "
                         )}

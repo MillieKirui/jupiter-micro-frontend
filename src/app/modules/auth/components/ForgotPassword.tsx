@@ -29,6 +29,7 @@ export function ForgotPassword() {
       setTimeout(() => {
         requestPassword(values.email)
           .then(({ data: { result } }) => {
+            console.log(result);
             setHasErrors(false);
             setLoading(false);
           })
