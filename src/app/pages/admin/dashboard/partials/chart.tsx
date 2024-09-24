@@ -23,7 +23,7 @@ const StatusListChart: React.FC<StatusListChartProps> = ({ approvedCount, reject
         labels: ['Approved', 'Rejected','Pending'],
         datasets: [{
           data: [approvedCount, rejectedCount,pendingCount],
-          backgroundColor: ['#00A3FF', '#50CD89', '#E4E6EF']
+          backgroundColor: ['#00A3FF', '#50CD89', '#fd7e14']
         }],
       },
       options: {

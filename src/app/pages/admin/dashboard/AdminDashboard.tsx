@@ -7,8 +7,8 @@ import { KTSVG, toAbsoluteUrl } from "../../../helpers";
 import { getUsers } from "../../../modules/users/core/requests";
 import { LoanModel } from "../../../modules/application/models/LoanModel";
 import { getLoans } from "../../../modules/application/core/requests";
-import { Summary } from "./partials/summary";
 import StatusListChart from "./partials/chart";
+import Summary from "./partials/summary";
 
 export const AdminDashboard: React.FC = () => {
   //get user UUID
@@ -18,6 +18,8 @@ export const AdminDashboard: React.FC = () => {
 
   const [users, setUsers] = useState<UserModel[]>([]);
   const [loans, setLoans] = useState<LoanModel[]>([]);
+  const [totalDisbursed, setTotalDisbursed]=useState(0);
+  const [totalPending, setTotalPending]=useState(0);
 
   useEffect(()=>{
       getLoans().then((response)=>{
@@ -52,6 +54,31 @@ export const AdminDashboard: React.FC = () => {
   };
 
   const { approvedCount, rejectedCount, pendingCount } = countByStatus();
+
+  const gettotalDisbursed = () => {
+    const disbursedLoans = loans.filter(loan => loan.disbursed==true);
+    var sum=0
+    disbursedLoans.forEach(loan => {
+      sum+=parseInt(loan.loanAmount);
+    });
+    setTotalDisbursed(sum);
+    return disbursedLoans;
+};
+
+const getTotalPending = () => {
+  const approvedLoans = loans.filter(loan => loan.approvalStatus=='pending');
+  var sum=0
+  approvedLoans.forEach(loan => {
+    sum+=parseInt(loan.loanAmount);
+  });
+  setTotalPending(sum);
+  return approvedLoans;
+};
+
+useEffect(()=>{
+  getTotalPending();
+  gettotalDisbursed();
+},[]);
 
   return (
     <>
@@ -132,7 +159,7 @@ export const AdminDashboard: React.FC = () => {
                     {/*end::Label*/}
                     {/*begin::Label*/}
                     <div className="d-flex fs-6 fw-semibold align-items-center">
-                      <div className="bullet bg-gray-300 me-3"></div>
+                      <div className="bullet bg-gray-300 me-3 bg-warning"></div>
                       <div className="text-gray-400">Pending</div>
                       <div className="ms-auto fw-bold text-gray-700">{pendingCount}</div>
                     </div>
@@ -146,7 +173,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
             {/*end::Card*/}
           </div>
-         <Summary/>
+         <Summary totalDisbursed={totalDisbursed} totalPending={totalPending}/>
 			</div>
 
        </div>
