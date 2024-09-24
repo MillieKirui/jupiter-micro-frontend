@@ -42,7 +42,7 @@ export const DashboardPage: React.FC = () => {
     <PageTitle>User Dashboard</PageTitle>
       {/* begin::Row */}
       <div>
-            {/* begin::Row */}
+      {/* begin::Row */}
       <div className="row g-6 g-xl-9">
       <div className="col-lg-6 col-xxl-4">
       <div className="card card-custom shadow justify-content-center align-items-center">

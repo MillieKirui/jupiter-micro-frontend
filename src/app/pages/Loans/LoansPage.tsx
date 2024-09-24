@@ -5,13 +5,16 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../setup";
 import { LoanModel } from "../../modules/application/models/LoanModel";
 import { PageTitle } from "../../layout/core";
+import { ApplyLoanModal } from "../dashboards/_modals/apply-loan-stepper/ApplyLoanModal";
+import { KTSVG } from "../../helpers";
 
 export const LoansPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [filters, setFilters] = useState<{ [key: string]: string }>({});
   const [loading, setLoading] = useState(true);
-
-  const uuid = useSelector<RootState, string | undefined>(
+  const [showApplyLoanModal, setShowApplyLoanModal] = useState(false);
+  //get user UUID
+  const uuid = useSelector<RootState>(
     (state) => state.auth?.uuid,
   );
 
@@ -51,9 +54,67 @@ export const LoansPage: React.FC = () => {
     )
   );
 
+  const filterApprovedLoans = (status:string) => {
+    const approvedLoans = loans.filter(loan => loan.approvalStatus==status);
+    return approvedLoans;
+};
+
   return (
     <>
     <PageTitle>My Loans</PageTitle>
+     {/* begin::Row */}
+     <div className="row g-6 g-xl-9">
+      <div className="col-lg-4 col-xxl-4">
+      <div className="card card-custom shadow  justify-content-center align-items-center">
+            <div className="card-body justify-content-center">
+              <div className="d-flex text-center fs-2 mb-5">
+              <KTSVG
+                className="svg-icon-2 text-info"
+                path="/media/icons/coin_in_hand.svg"
+                />
+                <div className="justify-content-start alight-items-start">
+                  <div className="text-start fw-bolder text-info ">{loans.length}</div>
+                  <div className="fs-6 text-start">Total</div>
+                  <div className="fs-6 text-start">Applied</div>
+                </div>
+              </div>
+         </div>
+          </div>
+      </div>
+      <div className="col-lg-4 col-xxl-4">
+      <div className="card card-custom shadow  justify-content-center align-items-center">
+            <div className="card-body justify-content-center">
+              <div className="d-flex text-center mb-5">
+              <i className="fa fa-check fs-3x p-5 justify-content-start alight-items-start bg-light-info rounded-circle me-10 text-primary" aria-hidden="true"></i> 
+                <div className="justify-content-start alight-items-start">
+                  <div className="text-start fw-bolder text-primary ">{(filterApprovedLoans('approved')).length}</div>
+                  <div className="fs-6 text-start">Total</div>
+                  <div className="fs-6 text-start">Approved</div>
+                </div>
+              </div>
+         </div>
+          </div>
+      </div>
+      <div className="col-lg-4 col-xxl-4">
+      <div className="card card-custom shadow  justify-content-center align-items-center">
+            <div className="card-body justify-content-center">
+              <div className="d-flex text-center fs-2 mb-5">
+                <i className="fa fa-times fs-3x p-5 justify-content-start alight-items-start bg-light-info rounded-circle me-10 text-danger" aria-hidden="true"></i>         
+                <div className="justify-content-start alight-items-start">
+                  <div className="text-start fw-bolder text-danger ">{(filterApprovedLoans('rejected')).length}</div>
+                  <div className="fs-6 text-start">Total</div>
+                  <div className="fs-6 text-start">Rejected</div>
+                </div>
+              </div>
+         </div>
+          </div>
+      </div>
+  
+        <div>
+   
+        </div>
+      </div>
+      {/* end::Row */}
      <div className="d-flex g-0 g-xl-4 g-xxl-6 justify-content-start gap-15">
         <div className="card card-custom shadow col-12 justify-content-center align-items-center">
           <div className="card-body col-12 justify-content-center">
@@ -105,6 +166,13 @@ export const LoansPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+       {/* begin::Modals */}
+       <ApplyLoanModal
+        show={showApplyLoanModal}
+        handleClose={() => setShowApplyLoanModal(false)}
+      />
+      {/* end::Modals */}
     </>
   );
 };
