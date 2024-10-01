@@ -82,7 +82,7 @@ export const Applications: React.FC = () => {
               <div className="d-flex border mb-5 p-4 fw-bolder text-start bg-light-info">
               <div className="me-2 col-2">Loan Amount</div>
               <div className="me-2 col-3">Application Date</div>
-              <div className="me-2 col-3">Status</div>
+              <div className="me-2 col-2">Status</div>
               <div className="me-2 col-3">Date Disbursed</div>
             </div>
             {searchedData.map((item, index) => (
@@ -90,12 +90,13 @@ export const Applications: React.FC = () => {
                <div className="d-flex border mb-5 p-4 btn btn-light text-start">               
                 <div className="me-2 col-2"><a className="text-dark">{item.loanAmount}</a></div>
                 <div className="me-2 col-3">{new Date(item.createdAt).toLocaleString()} </div>
-                <div className={`me-2 col-3 ${
-                  item.approvalStatus === 'approved' ? 'text-success' :
-                  item.approvalStatus === 'pending' ? 'text-warning' : 
-                  'text-danger'
-                }`}>{item.approvalStatus}</div>
-                <div className="me-2 col-3">{item.disbursed ===true && (new Date(item.dateDisbursed).toLocaleString())}</div>                
+                <div className={`me-2 col-1 badge ${
+                  item.disbursed === true ? 'bg-primary':
+                  item.approvalStatus === 'approved' ? 'bg-success' :
+                  item.approvalStatus === 'pending' ? 'bg-warning' : 
+                  'bg-danger'
+                }`}>{item.disbursed ===true ? "Disbursed" : item.approvalStatus}</div>
+                <div className="me-2 col-3 text-end">{item.disbursed ===true && (new Date(item.dateDisbursed).toLocaleString())}</div>                
              </div>
              </a>   
             ))}
