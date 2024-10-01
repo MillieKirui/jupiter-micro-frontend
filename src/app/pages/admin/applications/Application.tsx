@@ -8,6 +8,8 @@ import { LoanModel } from "../../../modules/application/models/LoanModel";
 import { PageTitle } from "../../../layout/core";
 import Swal from "sweetalert2";
 import { DisbursmentModal } from "./Modals/DisbursmentModal";
+import { getUser } from "../../../modules/auth/core/requests";
+
 
 export const Application: React.FC = () => {
   //get user UUID
@@ -19,7 +21,9 @@ export const Application: React.FC = () => {
  
   const [showDisbursmentModal, setShowDisbursmentModal] = useState(false);
   const [loan, setLoan] = useState<LoanModel>();
+  const [applicantName, setApplicantName] = useState('');
 
+  //get loan
   const getloan =()=>{
       getLoanById(applicationId).then((response)=>{
       setLoan(response.data);
@@ -32,6 +36,20 @@ export const Application: React.FC = () => {
   useEffect(()=>{
     getloan();
   },[]);
+
+  //get applicant
+    const getApplicant =()=>{
+        getUser(loan?.applicantId).then((response)=>{
+        setApplicantName(response.data.firstName + " " + response.data.lastName)
+        console.log(response.data);
+    }).catch((error)=>{
+        console.log(error);
+    });
+    }
+
+  useEffect(()=>{
+    getApplicant();
+  },[loan]);
   
 
   //Approval function
@@ -121,14 +139,11 @@ export const Application: React.FC = () => {
             <div className="card mb-4">
             <div className="card-body">
                 <div className="list-group">
-                    <div className="list-group-item d-flex justify-content-between align-items-center">
+                    {/* <div className="list-group-item d-flex justify-content-between align-items-center">
                         <strong>Loan ID:</strong> <span>{loan?.id}</span>
-                    </div>
+                    </div> */}
                     <div className="list-group-item d-flex justify-content-between align-items-center">
-                        <strong>UUID:</strong> <span>{loan?.uuid}</span>
-                    </div>
-                    <div className="list-group-item d-flex justify-content-between align-items-center">
-                        <strong>Applicant ID:</strong> <span>{loan?.applicantId}</span>
+                        <strong>Applicant</strong> <span>{applicantName}</span>
                     </div>
                     <div className="list-group-item d-flex justify-content-between align-items-center">
                         <strong>Loan Amount:</strong> <span>Ksh {loan?.loanAmount}</span>

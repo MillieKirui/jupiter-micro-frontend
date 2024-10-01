@@ -95,7 +95,7 @@ export const Applications: React.FC = () => {
                   item.approvalStatus === 'pending' ? 'text-warning' : 
                   'text-danger'
                 }`}>{item.approvalStatus}</div>
-                <div className="me-2 col-3">{new Date(item.dateDisbursed).toLocaleString()}</div>                
+                <div className="me-2 col-3">{item.disbursed ===true && (new Date(item.dateDisbursed).toLocaleString())}</div>                
              </div>
              </a>   
             ))}

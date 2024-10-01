@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 export const LoanSlice = createSlice({
     name :'loan',
     initialState:{
-        pendingLoans:0
+        pendingLoans:0,
+        approvedLoan:0
 
     },
     reducers:{

@@ -111,3 +111,5 @@ export function getLoans() {
 export function updateDisbursment(uuid:any,payType:string, transactionNumber:string, dateDisbursed:Date){
   return axios.post<LoanModel>(`${LOANS_URL}/updateDisbursment/${uuid}`,{payType,transactionNumber,dateDisbursed});
 }
+
+//
