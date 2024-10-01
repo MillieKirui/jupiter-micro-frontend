@@ -1,12 +1,13 @@
 import axios from "axios";
 import { ApplicationModel } from "../models/ApplicationModel";
 import { LoanModel } from "../models/LoanModel";
+import { UserModel } from "../../auth/models/UserModel";
 
 
 const API_URL = process.env.REACT_APP_API_URL || "api";
 
 export const LOANS_URL = `${API_URL}/loans`;
-export const LOAN_APPLICATION_URL = `${API_URL}/applicants/create`;
+export const APPLICATION_URL = `${API_URL}/applicants`;
 export const LOAN_CALCULATION_URL = `${API_URL}/loans/calculate`;
 
 
@@ -32,13 +33,11 @@ export function applyLoan(
     paymentFrequency: string,
     collateralType: string,
     collateralValue: number,
-    collateralFile: File | null, // Ensure this is of type File
-    uuid: any // Adjust type as necessary
+    collateralFile: File | null, 
+    uuid: any 
 ) {
-  // Create a FormData object
+
   const formData = new FormData();
-  
-  // Append all fields to the FormData object
   formData.append('firstName', firstName);
   formData.append('lastName', lastName);
   formData.append('fullName', fullName);
@@ -55,21 +54,20 @@ export function applyLoan(
   formData.append('businessLocation', businessLocation);
   formData.append('nextOfKin', nextOfKin);
   formData.append('nextOfKinPhone', nextOfKinPhone);
-  formData.append('loanAmount', loanAmount.toString()); // Convert number to string
-  formData.append('loanTerm', loanTerm.toString()); // Convert number to string
+  formData.append('loanAmount', loanAmount.toString()); 
+  formData.append('loanTerm', loanTerm.toString()); 
   formData.append('paymentFrequency', paymentFrequency);
   formData.append('collateralType', collateralType);
-  formData.append('collateralValue', collateralValue.toString()); // Convert number to string
+  formData.append('collateralValue', collateralValue.toString()); 
   
   // Append the file if it exists
   if (collateralFile) {
-      formData.append('collateralFile', collateralFile); // Append the file
+      formData.append('collateralFile', collateralFile);
   }
 
-  // Make the POST request with FormData
-  return axios.post<ApplicationModel>(`${LOAN_APPLICATION_URL}/${uuid}`, formData, {
+  return axios.post<ApplicationModel>(`${APPLICATION_URL}/create/${uuid}`, formData, {
       headers: {
-          'Content-Type': 'multipart/form-data' // Set content type for FormData
+          'Content-Type': 'multipart/form-data'
       }
   });
 };
@@ -112,4 +110,7 @@ export function updateDisbursment(uuid:any,payType:string, transactionNumber:str
   return axios.post<LoanModel>(`${LOANS_URL}/updateDisbursment/${uuid}`,{payType,transactionNumber,dateDisbursed});
 }
 
-//
+//get Applicatnt
+export function getApplicant(uuid:any) {
+  return axios.get<UserModel>(`${APPLICATION_URL}/${uuid}`); 
+}

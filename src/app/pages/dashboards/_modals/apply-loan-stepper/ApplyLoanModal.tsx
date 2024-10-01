@@ -165,10 +165,6 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
     stepper.current.goNext();
   };
 
-  // const submit = () => {
-  //   window.location.reload();
-  // };
-
   return (
     <Modal
       id="kt_modal_apply_loan"
@@ -182,14 +178,14 @@ const ApplyLoanModal: React.FC<Props> = ({ show, handleClose }) => {
       <div className="container px-10 py-10">
         <div className="modal-header py-2 d-flex border-0 align-items-center">
         <h2 className="text-center display-7 text-uppercase ">Loan Application</h2>  
-          {/* begin::Close */}
-          <div
-            className="btn btn-icon btn-sm btn-light-info justify-content-end "
-            onClick={handleClose}
-          >
-            <i className="far fa-xmark"></i>
-          </div>
-          {/* end::Close */}
+            {/* begin::Close */}
+            <div
+              className="btn btn-icon btn-sm btn-light-info justify-content-center"
+              onClick={handleClose}
+            >
+              <i className="fa fa-times" aria-hidden="true"></i>
+            </div>
+            {/* end::Close */}
         </div>
 
         <div className="modal-body">      

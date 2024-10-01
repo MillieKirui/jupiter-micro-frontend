@@ -9,8 +9,9 @@ export interface UserModel {
   email: string;
   firstName: string;
   lastName: string;
-  fullname?: string;
+  fullName?: string;
   auth?: AuthModel;
   address?: UserAddressModel;
   role?:string;
+  userId?:string;
 }

@@ -7,30 +7,35 @@ import { PageTitle } from "../../../layout/core";
 import Swal from "sweetalert2";
 import { getUser, getUserById } from "../../../modules/auth/core/requests";
 import { UserModel } from "../../../modules/auth/models/UserModel";
+import { Loans } from "../../Loans/Loans";
 
 export const User: React.FC = () => {
-  //get user UUID
-  const uuid = useSelector<RootState>(
-    (state) => state.auth?.uuid,
-  );
 
-  const {userId} = useParams<{userId:string}>();
- 
-  const [user, setUser] = useState<UserModel>();
+    const[userLoans, setUserLoans]= useState(true);
+    const[userSecurityItems, setUserSecurityItems]= useState(false);
 
-  const getSelectedUser =()=>{
-      getUser(userId).then((response)=>{
-      setUser(response.data);
-      console.log(response.data);
-    }).catch((error)=>{
-        console.log(error);
-    });
-  }
+    //get user UUID
+    const uuid = useSelector<RootState>(
+        (state) => state.auth?.uuid,
+    );
 
-  useEffect(()=>{
-    getSelectedUser();
-  },[]);
-  
+    const {userId} = useParams<{userId:string}>();
+    
+    const [user, setUser] = useState<UserModel>();
+
+    const getSelectedUser =()=>{
+        getUser(userId).then((response)=>{
+        setUser(response.data);
+        console.log(response.data);
+        }).catch((error)=>{
+            console.log(error);
+        });
+    }
+
+    useEffect(()=>{
+        getSelectedUser();
+    },[]);
+    
 
   return (
     <>
@@ -124,20 +129,38 @@ export const User: React.FC = () => {
                     {/*end::Info*/}
                 </div>
                 {/*end::Details*/}
-                {/*begin::Navs*/}
-                <ul className="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold">
-                    {/*begin::Nav item*/}
-                    <li className="nav-item mt-2">
-                        <a className="nav-link text-active-primary ms-0 me-10 py-5 active">Applications</a>
-                    </li>
-                    {/*end::Nav item*/}                                    
-                    {/*begin::Nav item*/}
-                    <li className="nav-item mt-2">
-                        <a className="nav-link text-active-primary ms-0 me-10 py-5">Security Items</a>
-                    </li>
-                    {/*end::Nav item*/}
-                </ul>
-                {/*begin::Navs*/}
+                   {/*begin::Navs*/}
+                   <ul className="nav nav-stretch nav-line-tabs nav-line-tabs-2x border-transparent fs-5 fw-bold">
+                          {/*begin::Nav item*/}
+                          <li className="nav-item mt-2">
+                              <a className={`nav-link text-active-primary ms-0 me-10 py-5 ${userLoans==true && 'active'}`} 
+                              onClick={()=>{
+                                setUserLoans(true);
+                                setUserSecurityItems(false);
+                              }}>Applications</a>
+                          </li>
+                          {/*end::Nav item*/}                                    
+                          {/*begin::Nav item*/}
+                          <li className="nav-item mt-2">
+                              <a className={`nav-link text-active-primary ms-0 me-10 py-5 ${userSecurityItems==true && 'active'}`} 
+                              onClick={()=>{
+                                setUserLoans(false);
+                                setUserSecurityItems(true);
+                              }}>Security Items</a>
+                          </li>
+                          {/*end::Nav item*/}
+                      </ul>
+                      {/*begin::Navs*/}
+                      <div className="g-0 g-xl-4 g-xxl-6">
+                        {userLoans &&
+                        <Loans uuid={userId}/>
+                        }
+                        {userSecurityItems &&
+                        <div>
+                          Security Items
+                        </div>
+                        }
+                      </div>
             </div>
         </div>
         </div>

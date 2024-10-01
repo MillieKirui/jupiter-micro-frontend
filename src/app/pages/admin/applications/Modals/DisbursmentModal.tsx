@@ -49,11 +49,11 @@ const DisbursmentModal: React.FC<Props> = ({ show, handleClose, uuid }) => {
           <div className="modal-header py-2 d-flex border-0 align-items-center">
           <h2 className="text-center display-7 text-uppercase ">Loan Disbursment</h2>  
             {/* begin::Close */}
-            <div
-              className="btn btn-icon btn-sm btn-light-info justify-content-end "
+               <div
+              className="btn btn-icon btn-sm btn-light-info justify-content-center"
               onClick={handleClose}
             >
-              <i className="far fa-xmark"></i>
+              <i className="fa fa-times" aria-hidden="true"></i>
             </div>
             {/* end::Close */}
           </div>  

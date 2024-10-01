@@ -3,12 +3,14 @@ import React, { useEffect, useState } from "react";
 import { RootState } from "../../../../setup";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { getLoanById,updateLoanStatus } from "../../../modules/application/core/requests";
+import { getApplicant, getLoanById,updateLoanStatus } from "../../../modules/application/core/requests";
 import { LoanModel } from "../../../modules/application/models/LoanModel";
 import { PageTitle } from "../../../layout/core";
 import Swal from "sweetalert2";
 import { DisbursmentModal } from "./Modals/DisbursmentModal";
 import { getUser } from "../../../modules/auth/core/requests";
+import { ApplicantModal } from "./Modals/ApplicantModal";
+import { UserModel } from "../../../modules/auth/models/UserModel";
 
 
 export const Application: React.FC = () => {
@@ -20,37 +22,41 @@ export const Application: React.FC = () => {
   const {applicationId} = useParams<{applicationId:string}>();
  
   const [showDisbursmentModal, setShowDisbursmentModal] = useState(false);
+  const [applicantModal, setApplicantModal] = useState(false);
   const [loan, setLoan] = useState<LoanModel>();
-  const [applicantName, setApplicantName] = useState('');
+  const [applicant, setApplicant] = useState<UserModel>();
 
   //get loan
   const getloan =()=>{
       getLoanById(applicationId).then((response)=>{
       setLoan(response.data);
-      console.log(response.data);
     }).catch((error)=>{
         console.log(error);
     });
   }
 
+  
   useEffect(()=>{
     getloan();
   },[]);
 
-  //get applicant
-    const getApplicant =()=>{
-        getUser(loan?.applicantId).then((response)=>{
-        setApplicantName(response.data.firstName + " " + response.data.lastName)
-        console.log(response.data);
-    }).catch((error)=>{
-        console.log(error);
-    });
-    }
+    //get applicant
+    const getApplicantDetails =()=>{
+      console.log(loan);
+      if(loan){
+            getApplicant(loan?.applicantId).then((response)=>{
+              setApplicant(response.data);
+        }).catch((error)=>{
+            console.log(error);
+        });
+      }
+ }
+
 
   useEffect(()=>{
-    getApplicant();
+    console.log(loan);
+    getApplicantDetails();
   },[loan]);
-  
 
   //Approval function
   const updateLoanState = (status: any)=>{
@@ -117,25 +123,29 @@ export const Application: React.FC = () => {
                 Disburse
               </button>
             )}
-                 <DisbursmentModal
-      show={showDisbursmentModal}
-      handleClose={() => setShowDisbursmentModal(false)}
-      uuid={applicationId}
-      />
+            <DisbursmentModal
+            show={showDisbursmentModal}
+            handleClose={() => setShowDisbursmentModal(false)}
+            uuid={applicationId}
+            />
             </div>
           </div>
-          <div className="card-body border col-11 justify-content-center align-items-center ">
-          <div>
-          <div className="d-flex align-items-center mb-2">
-              <span className="fs-1 fw-semibold text-gray-400 me-1 mt-n1">Ksh </span>
-              <span className="fs-2x fw-bold text-gray-800 me-2 lh-1 ls-n2">{loan?.loanAmount}</span>
-              <span className="badge badge-light-success fs-base">
-              <i className="fa fa-arrow-up fs-5 text-success ms-n1">
-              </i>{loan?.interestAmount}</span>
-          </div>
-          <span className="fs-6 fw-semibold text-gray-400">Loan Amount and Interest</span>
-
-          </div>
+          <div className="card-body border col-11 justify-content-center align-items-center ">  
+            <div className="d-flex justify-content-between">
+              <div>
+                <div className="d-flex align-items-center mb-2">
+                    <span className="fs-1 fw-semibold text-gray-400 me-1 mt-n1">Ksh </span>
+                    <span className="fs-2x fw-bold text-gray-800 me-2 lh-1 ls-n2">{loan?.loanAmount}</span>
+                    <span className="badge badge-light-success fs-base">
+                    <i className="fa fa-arrow-up fs-5 text-success ms-n1">
+                    </i>{loan?.interestAmount}</span>
+                </div>
+                <span className="fs-6 fw-semibold text-gray-400">Loan Amount and Interest</span>
+              </div>
+              <div>
+                <button className="btn btn-light-info" onClick={()=>setApplicantModal(true)}>View Applicant</button>
+              </div>
+            </div>              
             <div className="card mb-4">
             <div className="card-body">
                 <div className="list-group">
@@ -143,7 +153,7 @@ export const Application: React.FC = () => {
                         <strong>Loan ID:</strong> <span>{loan?.id}</span>
                     </div> */}
                     <div className="list-group-item d-flex justify-content-between align-items-center">
-                        <strong>Applicant</strong> <span>{applicantName}</span>
+                        <strong>Applicant</strong> <span><a>{applicant?.fullName}</a></span>
                     </div>
                     <div className="list-group-item d-flex justify-content-between align-items-center">
                         <strong>Loan Amount:</strong> <span>Ksh {loan?.loanAmount}</span>
@@ -217,11 +227,15 @@ export const Application: React.FC = () => {
                     </div>
                 </div>
             </div>
-        </div>
-
+          </div>
           </div>
         </div>
       </div>
+      <ApplicantModal
+        show={applicantModal}
+        handleClose={() => setApplicantModal(false)}
+        applicant={applicant}
+      />
     </>
   );
 };
